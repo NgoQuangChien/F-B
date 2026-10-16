@@ -1,0 +1,11 @@
+
+.bus-profile-table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.bus-profile-table tr, 
+.bus-profile-table td{
+    border: 1px solid #000000;
+}

@@ -1,0 +1,82 @@
+
+.slogan h1 {
+    text-align: center;
+    font-size: 45px;
+    margin-top: 50px;
+}
+
+.slogan p {
+    position: relative;
+    top: -15px;
+    text-align: center;
+    font-size: 18px;
+    color: #565B4E;
+}
+
+.search {
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+}
+
+.search input {
+    width: 480px;
+    height: 20px;
+    padding: 10px 10px 10px 20px;
+    border: 1px solid #E2DAC7;
+    border-radius: 15px 0 0 15px;
+    outline: none;
+    font-size: 16px;
+}
+
+.search button {
+    width: 150px;
+    height: 42px;
+    border: 1px solid #E2DAC7;
+    border-left: none;
+    border-radius: 0 15px 15px 0;
+    background-color: #C23B22;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.business-promotion {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 50px;
+    border: 1px solid #E2DAC7;
+    margin-left: 30px;
+    margin-right: 30px;
+    height: 55px;
+    border-radius: 10px;
+}
+
+.business-promotion h3 {
+    margin-left: 30px;
+    padding-top: 15px;
+}
+
+.business-promotion p {
+    position: relative;
+    top: -15px;
+    margin-left: 30px;
+    font-size: 16px;
+    color: #565B4E;
+}
+
+.business-promotion button {
+    margin-right: 30px;
+    width: 180px;
+    height: 40px;
+    border: 1px solid #E2DAC7;
+    border-radius: 10px;
+    background-color: #C23B22;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
