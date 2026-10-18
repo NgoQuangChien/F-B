@@ -1,0 +1,90 @@
+
+.introduce-container {
+    display: flex;
+    gap: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.introduce-info-branch {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    margin: 20px;
+    padding: 10px 30px;
+}
+
+.introduce-title-item {
+    font-size: 18px;
+    font-weight: 600;
+    color: #262626;
+    padding-top: 5px;
+    padding-left: 10px;
+}
+
+.introduce-icon {
+    position: relative;
+    top: 3px;
+}
+
+.introduce-item {
+    padding-left: 32px;
+    font-size: 18px;
+}
+
+.icon-status {
+    position: relative;
+    height: 10px;
+    width: 10px;
+    color: #20ff03;
+}
+
+.introduce-img-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.introduce-rating-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    gap: 5px;
+    padding: 10px;
+}
+
+.introduce-info-rating {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.introduce-map-container {
+    width: 300px;
+    height: 250px;
+    border: 1px solid #000000;
+    border-radius: 10px;
+}
+
+.introduce-other-branch {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.info-other-branch {
+    display: flex;
+    flex-direction: column;
+    padding-left: 10px;
+}
+
+.info-other-branch-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.introduce-avatar-branch {
+    height: 50px;
+    width: 50px;
+}

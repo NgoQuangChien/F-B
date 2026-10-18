@@ -30,9 +30,9 @@ function BusinessesDetailLayout () {
 
             <div className='businesses-detail-header-bottom'>
                 <NavLink to="" className='bottom-tabs'>Giới thiệu</NavLink>
-                <NavLink to="" className='bottom-tabs'>Menu</NavLink>
-                <NavLink to="" className='bottom-tabs'>Đánh giá</NavLink>
-                <NavLink to="" className='bottom-tabs'>Bài đăng</NavLink>
+                <NavLink to="thuc-don" className='bottom-tabs'>Menu</NavLink>
+                <NavLink to="danh-gia" className='bottom-tabs'>Đánh giá</NavLink>
+                <NavLink to="bai-dang" className='bottom-tabs'>Bài đăng</NavLink>
             </div>
 
             <Outlet/>

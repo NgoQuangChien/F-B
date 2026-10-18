@@ -80,3 +80,24 @@
     cursor: pointer;
 }
 
+.category {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 35px;
+    margin-right: 35px;
+    margin-top: 25px;
+}
+
+.title-category {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.more {
+    font-size: 18px;
+    font-weight: 600;
+    color: #C23B22;
+    cursor: pointer;
+}
+

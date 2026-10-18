@@ -1,0 +1,90 @@
+.image-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 24px;
+    background: rgba(0, 0, 0, 0.65);
+}
+
+.image-modal {
+    width: 100%;
+    max-width: 1000px;
+    max-height: 90vh;
+
+    display: flex;
+    flex-direction: column;
+
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.image-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 16px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.image-modal-header h2 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.image-modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: #f2f2f2;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.image-modal-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.image-modal-gallery img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.show-more-images {
+    border: none;
+    background: none;
+    color: #c23b22;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    .image-modal-overlay {
+        padding: 10px;
+    }
+
+    .image-modal-gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        padding: 12px;
+    }
+}

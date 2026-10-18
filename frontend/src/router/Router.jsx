@@ -11,8 +11,11 @@ import MyBranch from '../pages/businesses/my-branch/MyBranch'
 import BusinessesProfile from '../pages/user/businesses-profile/BusinessesProfile'
 import ShipperProfile from '../pages/user/shipper-profile/ShipperProfile'
 import MyOrder from '../pages/user/my-order/MyOrder'
-
 import Introduce from '../pages/user/businesses-detail/introduce/Introduce'
+import Post from '../pages/user/businesses-detail/post/Post'
+import Menu from '../pages/user/businesses-detail/menu/Menu'
+import Evaluate from '../pages/user/businesses-detail/evaluate/Evaluate'
+
 
 
 // Layout
@@ -29,15 +32,21 @@ function AppRouter() {
 
           { path: '/quan-cua-toi', element: <MyBusinesses/>},
           { path: '/chi-nhanh-cua-toi', element: <MyBranch/>},
-          { path: '/chi-tiet-quan',
+          { path: '/thong-tin-chi-tiet-chi-nhanh',
             element: <BusinessesDetailLayout/>,
             children: [
               {
                 index:true,
                 element: <Introduce/>,
               },
+              { path: 'thuc-don', element: <Menu/>},
+              { path: 'bai-dang', element: <Post/>},
+              { path: 'danh-gia', element: <Evaluate/>},
             ]
-           },
+          },
+
+          
+
           { path: '/don-hang-cua-toi', element: <MyOrder/>},
           { path: '/dang-ky-ho-so-quan', element: <BusinessesProfile/>},
           { path: '/dang-ky-ho-so-giao-hang', element: <ShipperProfile/>},

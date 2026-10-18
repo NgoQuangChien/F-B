@@ -1,0 +1,40 @@
+.card-info-branch-link-container{
+    margin-left: 8px;
+}
+
+.card-info-branch-container {
+    width: 250px;
+    height: 360px;
+    border: 1px solid #000000;
+    border-radius: 15px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.img-card-info-branch {
+    width: 250px;
+    height: 250px;
+    border-radius: 15px 15px 0 0;
+}
+
+.card-info-branch {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 5px;
+    color: #000000
+}
+
+.card-info-branch-link {
+    display: inline-block;
+    text-decoration: none;
+}
+
+.name-card-branch {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 18px;
+    font-weight: bold;
+}

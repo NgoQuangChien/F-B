@@ -1,8 +1,79 @@
 
 import React from 'react';
+
+import CardList from '../../components/card-list/CardList';
+
 import './home.css'
 
 function Home () {
+
+    const branches = [
+        {
+            id: 1,
+            businessesName: 'Highlands Coffee',
+            branchName: 'Chi nhánh Cầu Giấy',
+            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzT1nWe9uy2ENHMrlaBpyrktPo5Jkjp223j2rba1lETg&s=10',
+            address: 'Cầu Giấy, Hà Nội',
+            distance: '500 m',
+            type: 'Quán cà phê',
+            rating: 4.5
+        },
+        {
+            id: 2,
+            businessesName: 'Nhà hàng A',
+            branchName: 'Chi nhánh Hà Nội',
+            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzT1nWe9uy2ENHMrlaBpyrktPo5Jkjp223j2rba1lETg&s=10',
+            address: 'Đống Đa, Hà Nội',
+            distance: '1.2 km',
+            type: 'Nhà hàng',
+            rating: 4.2
+        },
+
+        {
+            id: 3,
+            businessesName: 'Highlands Coffee',
+            branchName: 'Chi nhánh Cầu Giấy',
+            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzT1nWe9uy2ENHMrlaBpyrktPo5Jkjp223j2rba1lETg&s=10',
+            address: 'Cầu Giấy, Hà Nội',
+            distance: '500 m',
+            type: 'Quán cà phê',
+            rating: 4.5
+        },
+
+        {
+            id: 4,
+            businessesName: 'Highlands Coffee',
+            branchName: 'Chi nhánh Cầu Giấy',
+            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzT1nWe9uy2ENHMrlaBpyrktPo5Jkjp223j2rba1lETg&s=10',
+            address: 'Cầu Giấy, Hà Nội',
+            distance: '500 m',
+            type: 'Quán cà phê',
+            rating: 4.5
+        },
+
+        {
+            id: 5,
+            businessesName: 'Highlands Coffee',
+            branchName: 'Chi nhánh Cầu Giấy',
+            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzT1nWe9uy2ENHMrlaBpyrktPo5Jkjp223j2rba1lETg&s=10',
+            address: 'Cầu Giấy, Hà Nội',
+            distance: '500 m',
+            type: 'Quán cà phê',
+            rating: 4.5
+        },
+
+        {
+            id: 6,
+            businessesName: 'Highlands Coffee',
+            branchName: 'Chi nhánh Cầu Giấy',
+            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzT1nWe9uy2ENHMrlaBpyrktPo5Jkjp223j2rba1lETg&s=10',
+            address: 'Cầu Giấy, Hà Nội',
+            distance: '500 m',
+            type: 'Quán cà phê',
+            rating: 4.5
+        },
+    ];
+
     return (
         <div className='home'>
             <div className="slogan">
@@ -24,6 +95,24 @@ function Home () {
                 <div className="business-promotion-button">
                     <button>Đăng ký hồ sơ ngay!</button>
                 </div>
+            </div>
+
+            <div>
+                <div className='category'>
+                    <p className='title-category'>Đang khuyến mãi</p>
+                    <p className='more'>Xem thêm</p>
+                </div>
+
+                <CardList branches={branches} />
+            </div>
+
+            <div>
+                <div className='category'>
+                    <p className='title-category'>Gần đây</p>
+                    <p className='more'>Xem thêm</p>
+                </div>
+
+                <CardList branches={branches} />
             </div>
         </div>
     )

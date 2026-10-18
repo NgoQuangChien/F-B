@@ -1,0 +1,30 @@
+.branch-gallery {
+    margin: 20px 0;
+}
+
+.branch-gallery-list {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: repeat(2, 150px);
+    gap: 8px;
+}
+
+.branch-gallery-list img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Ảnh đầu tiên lớn gấp đôi */
+.branch-gallery-list img:first-child {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+
+@media (max-width: 600px) {
+    .branch-gallery-list {
+        grid-template-rows: repeat(2, 100px);
+        gap: 5px;
+    }
+}
