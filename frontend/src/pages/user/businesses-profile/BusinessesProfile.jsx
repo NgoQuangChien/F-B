@@ -1,366 +1,360 @@
 
-import { use, useState } from 'react'
+import { useState } from "react";
+import { toast } from "react-toastify";
 
-import './businessesProfile.css'
+import businessApi from "../../../api/businessApi";
+import "./businessesProfile.css";
 
-function BusinessesProfile () {
+function BusinessesProfile() {
+    const [businessName, setBusinessName] = useState("");
 
-    const[businessesName, setBusinessesName] = useState('')
-    const[branchName, setBranchName] = useState('')
-    const[ownerName, setOwnerName] = useState('')
+    const [address, setAddress] = useState("");
+    const [addressLink, setAddressLink] = useState("");
+    const [latitude, setLatitude] = useState("");
+    const [longitude, setLongitude] = useState("");
 
-    const[addressBusinesses, setAddressBusinesses] = useState('')
-    const[addressBranch, setAddressBranch] = useState('')
-    const[latitudeBranch, setLatitudeBranch] = useState('')
-    const[longitudeBranch, setLongitudeBranch] = useState('')
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [email, setEmail] = useState("");
 
-    const[phoneNumberBusinesses, setPhoneNumberBusinesses] = useState('')
-    const[phoneNumberBranch, setPhoneNumberBranch] = useState('')
-    const[emailBusinesses, setEmailBusinesses] = useState('')
-    const[emailBranch, setEmailBranch] = useState('')
-    const[imageBranch, setImageBranch] = useState([])
+    const [citizenId, setCitizenId] = useState("");
 
-    const[citizenId, setCitizenId] = useState('')
-    const[imageCitizenIdBefore, setImageCitizenIdBefore] = useState('')
-    const[imageCitizenIdAfter, setImageCitizenIdAfter] = useState('')
+    // Ảnh đại diện quán
+    const [imageBusiness, setImageBusiness] = useState(null);
 
+    // Ảnh CCCD
+    const [imageCitizenBefore, setImageCitizenBefore] = useState(null);
+    const [imageCitizenAfter, setImageCitizenAfter] = useState(null);
 
-    const [openingHours, setOpeningHours] = useState([
-        {
-            dayOfWeek: 'Thứ 2',
-            openTime: '',
-            closeTime: '',
-            isClosed: false
-        },
-        {
-            dayOfWeek: 'Thứ 3',
-            openTime: '',
-            closeTime: '',
-            isClosed: false
-        },
-        {
-            dayOfWeek: 'Thứ 4',
-            openTime: '',
-            closeTime: '',
-            isClosed: false
-        },
-        {
-            dayOfWeek: 'Thứ 5',
-            openTime: '',
-            closeTime: '',
-            isClosed: false
-        },
-        {
-            dayOfWeek: 'Thứ 6',
-            openTime: '',
-            closeTime: '',
-            isClosed: false
-        },
-        {
-            dayOfWeek: 'Thứ 7',
-            openTime: '',
-            closeTime: '',
-            isClosed: false
-        },
-        {
-            dayOfWeek: 'Chủ nhật',
-            openTime: '',
-            closeTime: '',
-            isClosed: false
+    const [introduce, setIntroduce] = useState("");
+
+    const [loading, setLoading] = useState(false);
+
+    // Xóa dữ liệu form
+    const resetForm = () => {
+        setBusinessName("");
+
+        setAddress("");
+        setAddressLink("");
+        setLatitude("");
+        setLongitude("");
+
+        setPhoneNumber("");
+        setEmail("");
+
+        setCitizenId("");
+
+        setImageBusiness(null);
+        setImageCitizenBefore(null);
+        setImageCitizenAfter(null);
+
+        setIntroduce("");
+
+        // Xóa nội dung các input file
+        document.getElementById("imageBusiness").value = "";
+        document.getElementById("imageCitizenBefore").value = "";
+        document.getElementById("imageCitizenAfter").value = "";
+    };
+
+    // Xử lý gửi form
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // Kiểm tra ảnh
+        if (!imageBusiness) {
+            toast.error("Vui lòng chọn ảnh đại diện quán!");
+            return;
         }
-    ]);
 
-    return(
-        <form className="bus-profile-container">
-            <div>
-                <p className='bus-title'>Thông tin cơ sở kinh doanh</p>
+        if (!imageCitizenBefore || !imageCitizenAfter) {
+            toast.error("Vui lòng tải đủ ảnh CCCD mặt trước và mặt sau!");
+            return;
+        }
 
-                <div className='bus-group-input'>
-                    <label htmlFor="businessesName">Tên cơ sở kinh doanh</label>
-                    <input 
-                        className='bus-input-item'
-                        id='businessesName'
-                        name='businessesName'
-                        value={businessesName}
-                        onChange={(e) => setBusinessesName(e.target.value)}
+        try {
+            setLoading(true);
+
+            const formData = new FormData();
+
+            // Thông tin hồ sơ quán
+            formData.append("businessName", businessName);
+            formData.append("address", address);
+            formData.append("addressLink", addressLink);
+            formData.append("phone", phoneNumber);
+            formData.append("email", email);
+            formData.append("citizenId", citizenId);
+            formData.append("introduce", introduce);
+            formData.append("latitude", latitude);
+            formData.append("longitude", longitude);
+
+            // Ảnh đại diện quán
+            formData.append("imageBusiness", imageBusiness);
+
+            // Ảnh CCCD
+            formData.append("imageCitizenBefore", imageCitizenBefore);
+            formData.append("imageCitizenAfter", imageCitizenAfter);
+
+            // Gọi API
+            const resultBusiness = await businessApi.createBusiness(formData);
+
+            toast.success(
+                resultBusiness.data.message ||
+                "Đăng ký hồ sơ thành công, đang chờ duyệt!"
+            );
+
+            resetForm();
+
+        } catch (error) {
+            const message =
+                error.response?.data?.message ||
+                "Đăng ký không thành công. Vui lòng thử lại!";
+
+            toast.error(message);
+
+            console.error("Lỗi đăng ký hồ sơ:", error);
+
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <form
+            className="bus-profile-container"
+            onSubmit={handleSubmit}
+        >
+            <div className="bus-profile-form">
+
+                <p className="bus-title">
+                    Thông tin cơ sở kinh doanh
+                </p>
+
+                {/* Tên quán */}
+                <div className="bus-group-input">
+                    <label htmlFor="businessName">
+                        Tên cơ sở kinh doanh
+                    </label>
+
+                    <input
+                        className="bus-input-item"
+                        type="text"
+                        id="businessName"
+                        name="businessName"
+                        value={businessName}
+                        onChange={(e) => setBusinessName(e.target.value)}
+                        required
                     />
                 </div>
 
-                <div className='bus-group-input'>
-                    <label htmlFor="ownerName">Tên chủ cơ sở kinh doanh</label>
-                    <input 
-                        className='bus-input-item'
-                        type="text"
-                        id='ownerName'
-                        name='ownerName'
-                        value={ownerName}
-                        onChange={(e) => setOwnerName(e.target.value)}
-                    />
-                </div>
+                {/* Ảnh đại diện quán */}
+                <div className="bus-group-input">
+                    <label htmlFor="imageBusiness">
+                        Ảnh đại diện quán
+                    </label>
 
-                <div className='bus-group-input'>
-                    <label htmlFor="phoneNumber">Số điện thoại</label>
-                    <input 
-                        className='bus-input-item'
-                        type="text"
-                        id='phoneNumber'
-                        name='phoneNumber'
-                        value={phoneNumberBusinesses}
-                        onChange={(e) => setPhoneNumberBusinesses(e.target.value)}
-                    />
-                </div>
-
-                <div className='bus-group-input'>
-                    <label htmlFor="email">Email</label>
-                    <input 
-                        className='bus-input-item'
-                        type="text"
-                        id='email'
-                        name='email'
-                        value={emailBusinesses}
-                        onChange={(e) => setEmailBusinesses(e.target.value)} 
-                    />
-                </div>
-
-                <div className='bus-group-input'>
-                    <label htmlFor="address">Địa chỉ</label>
-                    <input 
-                        className='bus-input-item'
-                        type="text"
-                        id='address'
-                        name='address'
-                        value={addressBusinesses}
-                        onChange={(e) => setAddressBusinesses(e.target.value)}
-                    /> 
-                </div>
-
-                <div className='bus-group-input'>
-                    <label htmlFor="citizenId">Số căn cước công dân</label>
-                    <input 
-                        className='bus-input-item'
-                        type="text"
-                        id='citizenId'
-                        name='citizenId'
-                        value={citizenId}
-                        onChange={(e) => setCitizenId(e.target.value)}
-                    />
-                </div>
-
-                <div className='bus-group-input'>
-                    <label htmlFor="imageCitizenId">Ảnh CCCD (mặt trước)</label>
-                    <input 
-                        className='bus-input-item'
+                    <input
+                        className="bus-input-item"
                         type="file"
-                        id='imageCitizenId'
-                        name='imageCitizenId'
-                        value={imageCitizenIdBefore}
-                        onChange={(e) => setImageCitizenIdBefore(e.target.value)}
+                        id="imageBusiness"
+                        name="imageBusiness"
+                        accept="image/*"
+                        onChange={(e) =>
+                            setImageBusiness(e.target.files[0] || null)
+                        }
+                        required
+                    />
+
+                </div>
+
+                {/* Số điện thoại */}
+                <div className="bus-group-input">
+                    <label htmlFor="phoneNumber">
+                        Số điện thoại
+                    </label>
+
+                    <input
+                        className="bus-input-item"
+                        type="tel"
+                        id="phoneNumber"
+                        name="phoneNumber"
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
+                        required
                     />
                 </div>
 
-                <div className='bus-group-input'>
-                    <label htmlFor="imageCitizenId">Ảnh CCCD (mặt sau)</label>
-                    <input 
-                        className='bus-input-item'
-                        type="file"
-                        id='imageCitizenId'
-                        name='imageCitizenId'
-                        value={imageCitizenIdAfter}
-                        onChange={(e) => setImageCitizenIdAfter(e.target.value)}
+                {/* Email */}
+                <div className="bus-group-input">
+                    <label htmlFor="email">
+                        Email
+                    </label>
+
+                    <input
+                        className="bus-input-item"
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
-            </div>
 
-            <div className='bus-branch-info'>
-                <div>
-                    <p className='bus-title'>Thông tin chi nhánh gốc</p>
-                    <div className='bus-group-input'>
-                        <label htmlFor="branchName">Tên chi nhánh</label>
-                        <input 
-                            className='bus-input-item'
-                            type="text" 
-                            id='branchName'
-                            name='branchName'
-                            value={branchName}
-                            onChange={(e) => setBranchName(e.target.value)}
-                        />
-                    </div>
-                    <div className='bus-group-input'>
-                        <label htmlFor="phoneNumberBranch">Số điện thoại</label>
-                        <input 
-                            className='bus-input-item'
-                            type="text"
-                            id='phoneNumberBranch'
-                            name='phoneNumberBranch'
-                            value={phoneNumberBranch}
-                            onChange={(e) => setPhoneNumberBranch(e.target.value)}
-                        />
-                    </div>
-                    <div className='bus-group-input'>
-                        <label htmlFor="emailBranch">Email</label>
-                        <input 
-                            className='bus-input-item'
-                            type="text"
-                            id='emailbranch'
-                            name='emailBranch'
-                            value={emailBranch}
-                            onChange={(e) => setEmailBranch(e.target.value)} 
-                        />
-                    </div>
-                    <div className='bus-group-input'>
-                        <label htmlFor="addressBranch">Địa chỉ chi nhánh</label>
-                        <input 
-                            className='bus-input-item'
-                            type="text"
-                            id='addressBranch'
-                            name='addressbranch'
-                            value={addressBranch}
-                            onChange={(e) => setAddressBranch(e.target.value)}
-                        /> 
-                    </div>
-                    
-                    <div className='coordinates'>
-                        <div className='bus-group-input'>
-                            <label htmlFor="longitude">Kinh độ</label>
-                            <input 
-                                className='bus-input-item'
-                                type="text"
-                                id='longitude'
-                                name='longitude'
-                                value={longitudeBranch}
-                                onChange={(e) => setLongitudeBranch(e.target.value)}
-                            /> 
-                        </div>
-                        <div className='bus-group-input'>
-                            <label htmlFor="latitude">Vĩ độ</label>
-                            <input 
-                                className='bus-input-item'
-                                type="text"
-                                id='latitude'
-                                name='latitude'
-                                value={latitudeBranch}
-                                onChange={(e) => setLatitudeBranch(e.target.value)}
-                            /> 
-                        </div>
-                    </div>
-                    <div className='bus-group-input'>
-                        <label htmlFor="introduce">Giới thiệu</label>
-                    </div>
+                {/* Địa chỉ */}
+                <div className="bus-group-input">
+                    <label htmlFor="address">
+                        Địa chỉ
+                    </label>
 
-                    <div className='bus-group-input'>
-                        <label htmlFor="imageBranch">Một số hình ảnh về chi nhánh</label>
+                    <input
+                        className="bus-input-item"
+                        type="text"
+                        id="address"
+                        name="address"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        required
+                    />
+                </div>
+
+                {/* Google Maps */}
+                <div className="bus-group-input">
+                    <label htmlFor="addressLink">
+                        Đường dẫn địa chỉ Google Maps
+                    </label>
+
+                    <input
+                        className="bus-input-item"
+                        type="text"
+                        id="addressLink"
+                        name="addressLink"
+                        value={addressLink}
+                        onChange={(e) => setAddressLink(e.target.value)}
+                    />
+                </div>
+
+                {/* Tọa độ */}
+                <div className="coordinates">
+
+                    <div className="bus-group-input">
+                        <label htmlFor="longitude">
+                            Kinh độ
+                        </label>
+
                         <input
                             className="bus-input-item"
-                            type="file"
-                            id="imageBranch"
-                            name="imageBranch"
-                            accept="image/*"
-                            multiple
-                            onChange={(e) => {
-                                setImageBranch(Array.from(e.target.files));
-                            }}
+                            type="text"
+                            id="longitude"
+                            name="longitude"
+                            value={longitude}
+                            onChange={(e) => setLongitude(e.target.value)}
                         />
-
-                        {/* Hiển thị ảnh xem trước */}
-                        <div className="bus-image-preview">
-                            {imageBranch.map((image, index) => (
-                                <div className="bus-image-item" key={index}>
-                                    <img
-                                        src={URL.createObjectURL(image)}
-                                        alt={`Ảnh chi nhánh ${index + 1}`}
-                                    />
-                                </div>
-                            ))}
-                        </div>
                     </div>
+
+                    <div className="bus-group-input">
+                        <label htmlFor="latitude">
+                            Vĩ độ
+                        </label>
+
+                        <input
+                            className="bus-input-item"
+                            type="text"
+                            id="latitude"
+                            name="latitude"
+                            value={latitude}
+                            onChange={(e) => setLatitude(e.target.value)}
+                        />
+                    </div>
+
                 </div>
 
-                <div className="bus-opening-hours">
-                    <p className="bus-title">Giờ hoạt động</p>
+                {/* Giới thiệu */}
+                <div className="bus-group-input">
+                    <label htmlFor="introduce">
+                        Giới thiệu cơ sở kinh doanh
+                    </label>
 
-                    <div className="bus-hours-table">
-                        {/* Tiêu đề bảng */}
-                        <div className="bus-hours-header">
-                            <span>Thứ</span>
-                            <span>Giờ mở cửa</span>
-                            <span>Giờ đóng cửa</span>
-                            <span>Trạng thái</span>
-                        </div>
-
-                        {/* Danh sách giờ hoạt động */}
-                        {openingHours.map((day, index) => (
-                            <div className="bus-hours-row" key={day.dayOfWeek}>
-                                {/* Tên thứ */}
-                                <span className="bus-day">
-                                    {day.dayOfWeek}
-                                </span>
-
-                                {/* Giờ mở cửa */}
-                                <div className="bus-group-time">
-                                    <input
-                                        type="time"
-                                        id={`openTime-${index}`}
-                                        value={day.openTime}
-                                        disabled={day.isClosed}
-                                        onChange={(e) => {
-                                            const newOpeningHours = [...openingHours];
-
-                                            newOpeningHours[index] = {
-                                                ...newOpeningHours[index],
-                                                openTime: e.target.value
-                                            };
-
-                                            setOpeningHours(newOpeningHours);
-                                        }}
-                                    />
-                                </div>
-
-                                {/* Giờ đóng cửa */}
-                                <div className="bus-group-time">
-                                    <input
-                                        type="time"
-                                        id={`closeTime-${index}`}
-                                        value={day.closeTime}
-                                        disabled={day.isClosed}
-                                        onChange={(e) => {
-                                            const newOpeningHours = [...openingHours];
-
-                                            newOpeningHours[index] = {
-                                                ...newOpeningHours[index],
-                                                closeTime: e.target.value
-                                            };
-
-                                            setOpeningHours(newOpeningHours);
-                                        }}
-                                    />
-                                </div>
-
-                                {/* Checkbox nghỉ */}
-                                <label className="bus-closed">
-                                    <input
-                                        type="checkbox"
-                                        checked={day.isClosed}
-                                        onChange={(e) => {
-                                            const newOpeningHours = [...openingHours];
-
-                                            newOpeningHours[index] = {
-                                                ...newOpeningHours[index],
-                                                isClosed: e.target.checked
-                                            };
-
-                                            setOpeningHours(newOpeningHours);
-                                        }}
-                                    />
-                                    Nghỉ
-                                </label>
-                            </div>
-                        ))}
-                    </div>
+                    <textarea
+                        className="bus-input-item"
+                        id="introduce"
+                        name="introduce"
+                        value={introduce}
+                        onChange={(e) => setIntroduce(e.target.value)}
+                        rows="4"
+                    />
                 </div>
+
+                {/* CCCD */}
+                <div className="bus-group-input">
+                    <label htmlFor="citizenId">
+                        Số căn cước công dân
+                    </label>
+
+                    <input
+                        className="bus-input-item"
+                        type="text"
+                        id="citizenId"
+                        name="citizenId"
+                        value={citizenId}
+                        onChange={(e) => setCitizenId(e.target.value)}
+                        required
+                    />
+                </div>
+
+                {/* CCCD mặt trước */}
+                <div className="bus-group-input">
+                    <label htmlFor="imageCitizenBefore">
+                        Ảnh CCCD (mặt trước)
+                    </label>
+
+                    <input
+                        className="bus-input-item"
+                        type="file"
+                        id="imageCitizenBefore"
+                        name="imageCitizenBefore"
+                        accept="image/*"
+                        onChange={(e) =>
+                            setImageCitizenBefore(e.target.files[0] || null)
+                        }
+                        required
+                    />
+
+
+                </div>
+
+                {/* CCCD mặt sau */}
+                <div className="bus-group-input">
+                    <label htmlFor="imageCitizenAfter">
+                        Ảnh CCCD (mặt sau)
+                    </label>
+
+                    <input
+                        className="bus-input-item"
+                        type="file"
+                        id="imageCitizenAfter"
+                        name="imageCitizenAfter"
+                        accept="image/*"
+                        onChange={(e) =>
+                            setImageCitizenAfter(e.target.files[0] || null)
+                        }
+                        required
+                    />
+
+        
+                </div>
+
+                {/* Nút đăng ký */}
+                <div className="bus-group-input">
+                    <button
+                        className="btn-dk bus-input-item"
+                        type="submit"
+                        disabled={loading}
+                    >
+                        {loading ? "Đang đăng ký..." : "Đăng ký"}
+                    </button>
+                </div>
+
             </div>
-
         </form>
-    )
+    );
 }
 
-export default BusinessesProfile
+export default BusinessesProfile;

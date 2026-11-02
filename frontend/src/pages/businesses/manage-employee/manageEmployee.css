@@ -1,0 +1,542 @@
+
+.employees-page {
+    width: 100%;
+    min-width: 0;
+    padding: 28px;
+    box-sizing: border-box;
+    background: #f7f8fa;
+    color: #242424;
+}
+
+/* Tiêu đề */
+.employees-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+.employees-header h1 {
+    margin: 0 0 8px;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.employees-header p {
+    margin: 0;
+    color: #777;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.employees-add-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 44px;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 7px;
+    background: #df3939;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.employees-add-btn:hover {
+    background: #bd2929;
+}
+
+/* Thẻ thống kê */
+.employees-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.employees-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    padding: 20px;
+    border: 1px solid #e8e9ed;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 3%);
+}
+
+.employees-stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    border-radius: 10px;
+    font-size: 20px;
+}
+
+.employees-stat-icon.total {
+    background: #e9edff;
+    color: #5366cf;
+}
+
+.employees-stat-icon.working {
+    background: #e3f7e9;
+    color: #23984b;
+}
+
+.employees-stat-icon.manager {
+    background: #fff0d9;
+    color: #d58b19;
+}
+
+.employees-stat-icon.resigned {
+    background: #ffe7e7;
+    color: #d64040;
+}
+
+.employees-stat-card p {
+    margin: 0 0 7px;
+    color: #777;
+    font-size: 13px;
+}
+
+.employees-stat-card h3 {
+    margin: 0;
+    font-size: 25px;
+    font-weight: 700;
+}
+
+/* Thanh tìm kiếm và lọc */
+.employees-toolbar {
+    display: grid;
+    grid-template-columns: minmax(200px, 1fr) 220px 200px;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.employees-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    padding: 0 14px;
+    border: 1px solid #dedfe4;
+    border-radius: 7px;
+    background: white;
+    color: #8a8a8a;
+}
+
+.employees-search input {
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    padding: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #333;
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.employees-toolbar select {
+    width: 100%;
+    min-width: 0;
+    height: 46px;
+    padding: 0 12px;
+    border: 1px solid #dedfe4;
+    border-radius: 7px;
+    outline: none;
+    background: white;
+    color: #333;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.employees-search:focus-within,
+.employees-toolbar select:focus {
+    border-color: #df3939;
+}
+
+/* Bảng */
+.employees-table-card {
+    overflow: hidden;
+    border: 1px solid #e8e9ed;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 3%);
+}
+
+.employees-table-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 20px 22px;
+    border-bottom: 1px solid #eee;
+}
+
+.employees-table-heading h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.employees-table-heading > span {
+    color: #777;
+    font-size: 13px;
+}
+
+.employees-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.employees-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.employees-table th {
+    padding: 15px 18px;
+    background: #fafafa;
+    color: #666;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.employees-table td {
+    padding: 17px 18px;
+    border-top: 1px solid #eee;
+    color: #444;
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+.employees-table tbody tr:hover {
+    background: #fcfcfc;
+}
+
+/* Nhân viên */
+.employees-person {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.employees-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #f3dfdc;
+    color: #b83232;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.employees-person-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.employees-person-info strong {
+    color: #292929;
+    font-size: 13px;
+}
+
+.employees-person-info span {
+    color: #999;
+    font-size: 11px;
+}
+
+.employees-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.employees-contact span:first-child {
+    color: #444;
+}
+
+.employees-contact span:last-child {
+    color: #888;
+    font-size: 12px;
+}
+
+.employees-position {
+    display: inline-flex;
+    padding: 6px 9px;
+    border-radius: 5px;
+    background: #f1f1f1;
+    color: #666;
+    font-size: 12px;
+}
+
+.employees-position.manager-position {
+    background: #fff0d9;
+    color: #a66b0d;
+}
+
+/* Trạng thái */
+.employees-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.employees-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.status-working {
+    background: #e6f7eb;
+    color: #228b45;
+}
+
+.status-resigned {
+    background: #ffe9e9;
+    color: #c53232;
+}
+
+/* Nút thao tác */
+.employees-row-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.employees-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 8px 10px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.employees-action-btn.dismiss {
+    background: #fff0f0;
+    color: #c63232;
+}
+
+.employees-action-btn.dismiss:hover {
+    background: #ffdddd;
+}
+
+.employees-action-btn.restore {
+    background: #e6f7eb;
+    color: #218444;
+}
+
+.employees-action-btn.restore:hover {
+    background: #d1f0da;
+}
+
+.employees-empty {
+    height: 100px;
+    color: #888 !important;
+    text-align: center;
+}
+
+/* Modal */
+.employees-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+    background: rgb(0 0 0 / 45%);
+}
+
+.employees-modal,
+.employees-confirm-modal {
+    width: 100%;
+    max-width: 500px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    padding: 26px;
+    box-sizing: border-box;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 10px 40px rgb(0 0 0 / 18%);
+}
+
+.employees-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.employees-modal-header h2,
+.employees-confirm-modal h2 {
+    margin: 0 0 8px;
+    font-size: 21px;
+}
+
+.employees-modal-header p {
+    margin: 0;
+    color: #777;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.employees-modal-header > button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border: none;
+    border-radius: 50%;
+    background: #f1f1f1;
+    color: #555;
+    cursor: pointer;
+}
+
+.employees-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.employees-form-group label {
+    color: #333;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.employees-form-group input,
+.employees-form-group select {
+    width: 100%;
+    height: 44px;
+    padding: 0 12px;
+    box-sizing: border-box;
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+    outline: none;
+    background: white;
+    color: #333;
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.employees-form-group input:focus,
+.employees-form-group select:focus {
+    border-color: #df3939;
+    box-shadow: 0 0 0 3px rgb(223 57 57 / 8%);
+}
+
+.employees-form-note {
+    padding: 12px;
+    border-radius: 6px;
+    background: #f6f7f9;
+    color: #666;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.employees-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+.employees-cancel-btn,
+.employees-submit-btn {
+    min-height: 40px;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.employees-cancel-btn {
+    background: #f0f0f0;
+    color: #444;
+}
+
+.employees-cancel-btn:hover {
+    background: #e4e4e4;
+}
+
+.employees-submit-btn {
+    background: #df3939;
+    color: white;
+}
+
+.employees-submit-btn:hover {
+    background: #bd2929;
+}
+
+/* Modal xác nhận */
+.employees-confirm-modal {
+    max-width: 420px;
+    text-align: center;
+}
+
+.employees-confirm-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 54px;
+    height: 54px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    background: #fff0f0;
+    color: #d43a3a;
+    font-size: 22px;
+}
+
+.employees-confirm-modal p {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.employees-confirm-modal .employees-modal-actions {
+    justify-content: center;
+}
+
+

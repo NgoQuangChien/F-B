@@ -1,0 +1,129 @@
+
+.search-page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    color: #292929;
+    margin: 10px;
+}
+
+
+
+.search-page-layout {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 25px;
+    align-items: start;
+}
+
+/* Bộ lọc */
+.search-filter {
+    padding: 20px;
+    width: 250px;
+    border: 1px solid #5e5d5d;
+    border-radius: 10px;
+    background: #fff;
+}
+
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-bottom: 20px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid #707070;
+}
+
+.filter-group:last-child {
+    border-bottom: none;
+}
+
+.filter-group h3,
+.filter-group > label:first-child {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.filter-group input[type="text"],
+.filter-group select {
+    height: 40px;
+    padding: 0 11px;
+    border: 1px solid #555454;
+    border-radius: 6px;
+    outline: none;
+    font-size: 13px;
+}
+
+.filter-option {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #555;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.filter-option input {
+    accent-color: #e65c3a;
+}
+
+/* Kết quả */
+.search-results {
+    min-width: 0;
+}
+
+.search-results-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin: 0 20px 10px 20px;
+}
+
+.search-results-heading h2 {
+    font-size: 21px;
+    margin-bottom: 6px;
+}
+
+.search-results-heading p {
+    color: #888;
+    font-size: 13px;
+}
+
+.search-results-heading select {
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid #393939;
+    border-radius: 6px;
+    background: white;
+}
+
+.search-results-list {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+}
+
+/* Responsive */
+@media (max-width: 850px) {
+    .search-page-layout {
+        grid-template-columns: 230px minmax(0, 1fr);
+        gap: 15px;
+    }
+}
+
+@media (max-width: 650px) {
+    .search-page {
+        padding: 20px 14px;
+    }
+
+    .search-page-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .search-results-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

@@ -3,13 +3,13 @@
 import CardInfoBranch from '../../components/card-info-branch/CardInfoBranch';
 import './cardList.css'
 
-function CardList({ branches }) {
+function CardList({ business = [] }) {
     return (
         <div className="card-list">
-            {branches.map((branch) => (
+            {business.map((business) => (
                 <CardInfoBranch
-                    key={branch.id}
-                    branch={branch}
+                    key={business.id}
+                    business={business}
                 />
             ))}
         </div>

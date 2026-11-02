@@ -1,0 +1,105 @@
+/* Container */
+
+.mybus-container {
+    min-height: 100vh;
+    padding: 25px 30px;
+    box-sizing: border-box;
+}
+
+/* Header */
+
+.mybus-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.mybus-title {
+    margin: 0;
+    color: #252525;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+/* Button add business */
+
+.mybus-btn-add {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background-color: #e53935;
+    color: #fff;
+    font-size: 16px;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.mybus-btn-add:hover {
+    background-color: #c62828;
+}
+
+/* Table container */
+.mybus-content {
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid #e8e8e8;
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+.mybus-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* Table */
+
+.mybus-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    white-space: nowrap;
+}
+
+/* Table header */
+
+.mybus-table thead {
+    background-color: #f8f8f8;
+}
+
+.mybus-table th {
+    padding: 15px;
+    border-bottom: 1px solid #e8e8e8;
+    color: #555;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Table body */
+
+.mybus-table td {
+    padding: 16px 18px;
+    border-bottom: 1px solid #eee;
+    color: #333;
+    font-size: 16px;
+}
+
+.mybus-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Hover row */
+
+.mybus-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.mybus-table tbody tr:hover {
+    background-color: #fffafa;
+}

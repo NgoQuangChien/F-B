@@ -1,0 +1,120 @@
+
+/* Form đăng ký shipper */
+
+.shipper-form {
+    width: 100%;
+    max-width: 650px;
+    margin: 30px auto;
+    padding: 30px;
+    border: 1px solid #262525;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-sizing: border-box;
+}
+
+/* Tiêu đề */
+
+.shipper-form h2 {
+    margin: 0 0 25px;
+    color: #252525;
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* Nhóm label và input */
+
+.shipper-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.shipper-form-group label {
+    color: #333333;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Input và select */
+
+.shipper-form-group input,
+.shipper-form-group select {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 1px solid #252525;
+    border-radius: 6px;
+    outline: none;
+    background-color: #ffffff;
+    color: #333333;
+    font-family: inherit;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Placeholder */
+
+.shipper-form-group input::placeholder {
+    color: #a0a0a0;
+}
+
+
+/* Ô chọn file */
+
+.shipper-form-group input[type="file"] {
+    min-height: auto;
+    padding: 10px;
+    border: 1px dashed #cfcfcf;
+    background-color: #fafafa;
+    cursor: pointer;
+}
+
+.shipper-form-group input[type="file"]::file-selector-button {
+    margin-right: 12px;
+    padding: 9px 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #e53935;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+/* Hiệu ứng hover ô chọn file */
+
+.shipper-form-group input[type="file"]:hover {
+    border-color: #e53935;
+    background-color: #fffafa;
+}
+
+/* Nút gửi hồ sơ */
+
+.shipper-submit-btn {
+    display: block;
+    width: 100%;
+    min-height: 46px;
+    margin-top: 10px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    background-color: #e53935;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.shipper-submit-btn:hover {
+    background-color: #c62828;
+}
+
+.shipper-submit-btn:active {
+    background-color: #b71c1c;
+}
+

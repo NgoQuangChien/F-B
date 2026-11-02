@@ -1,25 +1,51 @@
+import { Link } from "react-router-dom";
+import "./cardInfoBranch.css";
 
-import {Link} from 'react-router-dom'
+const DEFAULT_IMAGE = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVJ3AZvyzhpitO0XaL98eWZNvV6_jp7N5kqsW_J2quMZuKOMkuKC_dD7o&s=10";
 
-import './cardInfoBranch.css'
+function CardInfoBranch({ business }) {
+    if (!business) return null;
 
-function CardInfoBranch ({branch}) {
-    return(
-        <div className='card-info-branch-link-container'>
-            <Link to={`/thong-tin-chi-tiet-chi-nhanh`} className='card-info-branch-link'>
-                <div className='card-info-branch-container'>
-                    <img src={branch.image} alt="Hình ảnh" className='img-card-info-branch'/>
+    return (
+        <div className="card-info-branch-link-container">
+            <Link
+                to={`/thong-tin-chi-tiet-quan/${business.businessId}`}
+                className="card-info-branch-link"
+            >
+                <div className="card-info-branch-container">
+                    <img
+                        src={business.imageBusiness || DEFAULT_IMAGE}
+                        alt={business.businessName}
+                        className="img-card-info-branch"
+                        onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = DEFAULT_IMAGE;
+                        }}
+                    />
+
                     <div className="card-info-branch">
-                        <span className='name-card-branch'>{branch.businessesName} - {branch.branchName}</span>
-                        <span>Địa chỉ: {branch.address}</span>
-                        <span>Khoảng cách: {branch.distance}</span>
-                        <span>Loại hình: {branch.type}</span>
-                        <span>sao {branch.rating}</span>
+                        <span className="name-card-branch">
+                            {business.businessName}
+                        </span>
+
+                        <span>Địa chỉ: {business.address}</span>
+
+                        <span>
+                            Khoảng cách: {business.distance || "Chưa xác định"}
+                        </span>
+
+                        <span>
+                            Loại hình: {business.type || "Chưa cập nhật"}
+                        </span>
+
+                        <span>
+                            Đánh giá: {business.rating || "Chưa có đánh giá"}
+                        </span>
                     </div>
                 </div>
             </Link>
         </div>
-    )
+    );
 }
 
-export default CardInfoBranch
+export default CardInfoBranch;

@@ -1,84 +1,45 @@
 
 import React from 'react';
-
+import { useState, useEffect } from 'react';
+import branchApi from '../../api/businessApi';
 import CardList from '../../components/card-list/CardList';
 
 import './home.css'
 
 function Home () {
 
-    const branches = [
-        {
-            id: 1,
-            businessesName: 'Highlands Coffee',
-            branchName: 'Chi nhánh Cầu Giấy',
-            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzT1nWe9uy2ENHMrlaBpyrktPo5Jkjp223j2rba1lETg&s=10',
-            address: 'Cầu Giấy, Hà Nội',
-            distance: '500 m',
-            type: 'Quán cà phê',
-            rating: 4.5
-        },
-        {
-            id: 2,
-            businessesName: 'Nhà hàng A',
-            branchName: 'Chi nhánh Hà Nội',
-            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzT1nWe9uy2ENHMrlaBpyrktPo5Jkjp223j2rba1lETg&s=10',
-            address: 'Đống Đa, Hà Nội',
-            distance: '1.2 km',
-            type: 'Nhà hàng',
-            rating: 4.2
-        },
+    const [business, setBusiness] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-        {
-            id: 3,
-            businessesName: 'Highlands Coffee',
-            branchName: 'Chi nhánh Cầu Giấy',
-            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzT1nWe9uy2ENHMrlaBpyrktPo5Jkjp223j2rba1lETg&s=10',
-            address: 'Cầu Giấy, Hà Nội',
-            distance: '500 m',
-            type: 'Quán cà phê',
-            rating: 4.5
-        },
+    
+    const fetchBusiness = async () => {
+        try {
+            setLoading(true);
 
-        {
-            id: 4,
-            businessesName: 'Highlands Coffee',
-            branchName: 'Chi nhánh Cầu Giấy',
-            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzT1nWe9uy2ENHMrlaBpyrktPo5Jkjp223j2rba1lETg&s=10',
-            address: 'Cầu Giấy, Hà Nội',
-            distance: '500 m',
-            type: 'Quán cà phê',
-            rating: 4.5
-        },
+            const result = await branchApi.getAllBusiness();
 
-        {
-            id: 5,
-            businessesName: 'Highlands Coffee',
-            branchName: 'Chi nhánh Cầu Giấy',
-            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzT1nWe9uy2ENHMrlaBpyrktPo5Jkjp223j2rba1lETg&s=10',
-            address: 'Cầu Giấy, Hà Nội',
-            distance: '500 m',
-            type: 'Quán cà phê',
-            rating: 4.5
-        },
+            console.log("Danh sách chi nhánh:", result.data);
 
-        {
-            id: 6,
-            businessesName: 'Highlands Coffee',
-            branchName: 'Chi nhánh Cầu Giấy',
-            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzT1nWe9uy2ENHMrlaBpyrktPo5Jkjp223j2rba1lETg&s=10',
-            address: 'Cầu Giấy, Hà Nội',
-            distance: '500 m',
-            type: 'Quán cà phê',
-            rating: 4.5
-        },
-    ];
+            setBusiness(result.data.data || []);
+
+        } catch (error) {
+            console.error("Lỗi lấy danh sách chi nhánh:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchBusiness();
+    }, []);
+
+    
+
 
     return (
         <div className='home'>
             <div className="slogan">
                 <h1>Hôm nay đi đâu, ăn gì?</h1>
-                {/* <p>Khám phá và lựa chọn địa điểm ăn uống, giải trí phù hợp với sở thích của bạn</p> */}
             </div>
 
             <div className="search">
@@ -99,20 +60,11 @@ function Home () {
 
             <div>
                 <div className='category'>
-                    <p className='title-category'>Đang khuyến mãi</p>
-                    <p className='more'>Xem thêm</p>
-                </div>
-
-                <CardList branches={branches} />
-            </div>
-
-            <div>
-                <div className='category'>
                     <p className='title-category'>Gần đây</p>
                     <p className='more'>Xem thêm</p>
                 </div>
 
-                <CardList branches={branches} />
+                <CardList business={business} />
             </div>
         </div>
     )

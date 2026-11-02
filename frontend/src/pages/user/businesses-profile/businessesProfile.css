@@ -1,17 +1,24 @@
 
 .bus-profile-container {
     display: flex;
+    justify-content: center;
+    align-items: center;
     gap: 80px;
     padding-left: 15px;
     padding-bottom: 20px;
-    border: 1px solid #000000;
-    border-radius: 10px;
     margin: 40px;
+}
+
+.bus-profile-form {
+    border: 1px solid #181818;
+    border-radius: 10px;
+    padding: 30px;
 }
 
 .bus-title {
     font-size: 24px;
     font-weight: bold;
+    text-align: center;
 }
 
 .bus-group-input {
@@ -21,24 +28,20 @@
 }
 
 .bus-group-input label {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
     margin-top: 15px;
+    margin-bottom: 5px;
     color: #000000;
 }
 
 .bus-input-item {
-    width: 350px;
-    height: 35px;
+    width: 600px;
+    height: 40px;
     font-size: 16px;
-}
-
-.bus-branch-info {
-    display: flex;
-    border-left: 1px solid #000000;
-    padding-left: 25px;
-    margin-left: -18px;
-    gap: 80px;
+    border-radius: 5px;
+    border: 1px solid #000000;
+    
 }
 
 
@@ -81,13 +84,6 @@
 }
 
 
-.bus-opening-hours {
-    font-size: 20px;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 16px;
-}
-
 /* Khung chứa các ảnh */
 .bus-image-preview {
     display: grid;
@@ -106,100 +102,18 @@
     background-color: #f5f5f5;
 }
 
-
-
-/* Khung bảng */
-.bus-hours-table {
-    display: flex;
-    flex-direction: column;
-    margin-top: 55px;
-    width: 100%;
-    border: 1px solid #e5e5e5;
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #fff;
-}
-
-/* Hàng tiêu đề và hàng dữ liệu */
-.bus-hours-header,
-.bus-hours-row {
-    display: grid;
-    grid-template-columns: 100px minmax(0, 1fr) minmax(0, 1fr) 90px;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-}
-
-/* Tiêu đề cột */
-.bus-hours-header {
+.btn-dk {
     font-size: 18px;
-    font-weight: bold;
-    color: #444;
-    border-bottom: 1px solid #e5e5e5;
-}
-
-/* Hàng dữ liệu */
-.bus-hours-row {
-    border-bottom: 1px solid #eee;
-}
-
-.bus-hours-row:last-child {
-    border-bottom: none;
-}
-
-/* Tên thứ */
-.bus-day {
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
-}
-
-/* Ô chọn giờ */
-.bus-group-time {
-    min-width: 0;
-}
-
-.bus-group-time input[type="time"] {
-    width: 100px;
-    height: 35px;
-    box-sizing: border-box;
-    padding: 9px 8px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 14px;
-    color: #333;
-    background-color: #fff;
-    outline: none;
-}
-
-.bus-group-time input[type="time"]:focus {
-    border-color: #c23b22;
-}
-
-.bus-group-time input[type="time"]:disabled {
-    background-color: #f2f2f2;
-    color: #999;
-    cursor: not-allowed;
-}
-
-/* Checkbox nghỉ */
-.bus-closed {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    font-size: 14px;
-    white-space: nowrap;
+    border-radius: 10px;
+    margin-top: 20px;
+    width: 610px;
+    height: 45px;
+    border: none;
+    background-color: #c23b22;
+    color: #fff;
     cursor: pointer;
 }
 
-.bus-closed input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    margin: 0;
-    accent-color: #c23b22;
-    cursor: pointer;
-}
 
 /* Giao diện mobile */
 @media (max-width: 600px) {

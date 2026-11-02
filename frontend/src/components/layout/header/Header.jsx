@@ -15,6 +15,9 @@ function Header() {
 
   const [openUserDropdown, setOpenUserDropdown] = useState(false);
   const [openAuth, setOpenAuth] = useState(null);
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem("user")) || null
+  );
 
   // Tham chiếu đến toàn bộ vùng avatar và dropdown
   const userInfoRef = useRef(null);
@@ -39,6 +42,33 @@ function Header() {
     };
   }, []);
 
+  const hasRole = (roleName) => {
+    return user?.roles?.some(
+      (role) => role.roleName === roleName
+    ) ?? false;
+  };
+
+  
+  const handleLogout = () => {
+   
+    const isConfirmed = window.confirm(
+      "Bạn có chắc chắn muốn đăng xuất không?"
+    );
+
+    if (!isConfirmed) {
+      return;
+    }
+
+    localStorage.removeItem("user");
+    localStorage.removeItem("accessToken");
+   
+    setUser(null);
+    setOpenUserDropdown(false);
+    setOpenAuth(null);
+
+    toast.success("Đăng xuất thành công!");
+  };
+
   return (
     <header className='header'>
       
@@ -47,67 +77,71 @@ function Header() {
       <div className="nav-links">
         <NavLink to="/" className="nav-item">Trang chủ</NavLink>
         <div className="explore-menu">
-            <div className="explore-tittle nav-item">Khám phá</div>
-            <div className="explore-dropdown">
-                <div className="explore-dropdown-item">Khám phá 1</div>
-                <div className="explore-dropdown-item">Khám phá 2</div>
-                <div className="explore-dropdown-item">Khám phá 3</div>
-                <div className="explore-dropdown-item">Khám phá 4</div>
-                <div className="explore-dropdown-item">Khám phá 5</div>
-                <div className="explore-dropdown-item">Khám phá 6</div>
-            </div>
+            <NavLink to='tim-kiem' className="explore-tittle nav-item">Khám phá</NavLink>
         </div>
-        <NavLink className="nav-item">Đang khuyến mãi</NavLink>
+        <NavLink to='/food&drink' className="nav-item">Food & Drink</NavLink>
         <NavLink className="nav-item">Yêu thích</NavLink>
       </div>
 
       <div className="header-right">
         <div className="nav-item">< FaBell className="bell-icon" /></div>
-        {/* <div className="auth-btn">
-          <button className="login-btn" onClick={() => setOpenAuth('login')}>Đăng nhập</button>
-          <button className="signup-btn" onClick={() => setOpenAuth('register')}>Đăng ký</button>
-        </div> */}
-        <div className="user-info" ref={userInfoRef}>
-          <img src={Avatar} alt="Avatar" className="avatar" onClick={() => setOpenUserDropdown(!openUserDropdown)} />
-          {openUserDropdown && (
-            <div className="user-dropdown">
-              <div>
-                <NavLink to="/" className="user-dropdown-item">Trang chủ</NavLink>
-              </div>
+        { user? (
+          <div className="user-info" ref={userInfoRef}>
+            <img src={Avatar} alt="Avatar" className="avatar" onClick={() => setOpenUserDropdown(!openUserDropdown)} />
+            {openUserDropdown && (
+              <div className="user-dropdown">
+                <div>
+                  <NavLink to="/" className="user-dropdown-item">Trang chủ</NavLink>
+                </div>
 
-              <div>
-                <NavLink to="/quan-cua-toi" className="user-dropdown-item">Quán của tôi</NavLink>
-              </div>
+                {hasRole("owner") && (
+                  <div>
+                    <NavLink to="/quan-cua-toi" className="user-dropdown-item">Quán của tôi</NavLink>
+                  </div>
+                )}
 
-              <div>
-                <NavLink to="/chi-nhanh-cua-toi" className="user-dropdown-item">Chi nhánh của tôi</NavLink>
-              </div>
 
-              <div>
-                <NavLink to="/don-giao-hang" className="user-dropdown-item">Đơn giao hàng</NavLink>
-              </div>
+                {hasRole("shipper") && (
+                  <div>
+                    <NavLink to="/giao-hang" className="user-dropdown-item">Giao hàng</NavLink>
+                  </div>
+                )}
 
-              <div>
-                <NavLink to="/don-hang-cua-toi" className="user-dropdown-item">Đơn hàng của tôi</NavLink>
-              </div>
+                {hasRole("user") && (
+                  <div>
+                    <NavLink to="/don-hang-cua-toi" className="user-dropdown-item">Đơn hàng của tôi</NavLink>
+                  </div>
+                )}
 
-              <div>
-                <NavLink to="/dang-ky-ho-so-quan" className="user-dropdown-item">Đăng ký hồ sơ quán</NavLink>
-              </div>
+                {hasRole("user") && (
+                  <div>
+                    <NavLink to="/dang-ky-ho-so-quan" className="user-dropdown-item">Đăng ký hồ sơ quán</NavLink>
+                  </div>
+                )}
 
-              <div>
-                <NavLink to="/dang-ky-ho-so-giao-hang" className="user-dropdown-item">Đăng ký hồ sơ giao hàng</NavLink>
-              </div>
+                {!hasRole("owner") && !hasRole("manager") && !hasRole("admin") &&(
+                  <div>
+                    <NavLink to="/dang-ky-ho-so-giao-hang" className="user-dropdown-item">Đăng ký hồ sơ giao hàng</NavLink>
+                  </div>
+                )}
 
-              <div>
-                <NavLink to="/quan-tri-he-thong" className="user-dropdown-item">Quản trị hệ thống</NavLink>
+                {hasRole("admin") && (
+                  <div>
+                    <NavLink to="/quan-tri-he-thong" className="user-dropdown-item">Quản trị hệ thống</NavLink>
+                  </div>
+                )}
+
+                <hr className="user-dropdown-line" />
+                <div className='logout-btn' onClick={handleLogout}><FaRightFromBracket className='logout-icon'/> Đăng xuất</div>
               </div>
-              
-              <hr className="user-dropdown-line" />
-              <div className='logout-btn'><FaRightFromBracket className='logout-icon'/> Đăng xuất</div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        ) : (
+          <div className="auth-btn">
+            <button className="login-btn" onClick={() => setOpenAuth('login')}>Đăng nhập</button>
+            <button className="signup-btn" onClick={() => setOpenAuth('register')}>Đăng ký</button>
+          </div>
+        )}   
       </div>
 
       {openAuth === 'login' && (
@@ -116,6 +150,12 @@ function Header() {
           onSwitchToRegister={() =>
             setOpenAuth("register")
           }
+
+          onLoginSuccess={(userData) => {
+            setUser(userData);
+            localStorage.setItem("user", JSON.stringify(userData));
+            setOpenAuth(null);
+        }}
         />
       )}
 

@@ -93,3 +93,41 @@
 .bottom-tabs:hover {
     border-bottom: 3px solid #C23B22;
 }
+
+
+.businesses-detail-banner {
+    width: 100%;
+    height: 350px;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #f1f1f1;
+}
+
+.businesses-detail-banner iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.businesses-detail-map-empty {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #777;
+    background: #f1f1f1;
+}
+
+.businesses-detail-map-empty svg {
+    font-size: 32px;
+}
+
+@media (max-width: 768px) {
+    .businesses-detail-banner {
+        height: 250px;
+    }
+}

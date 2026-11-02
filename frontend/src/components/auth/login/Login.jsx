@@ -2,17 +2,65 @@ import React from 'react'
 import {useState} from 'react'
 import {FaRegEyeSlash, FaRegEye} from "react-icons/fa6";
 
+import { toast } from 'react-toastify';
+
+import authApi from '../../../api/authApi';
+
 import './login.css'
 import '../../auth/auth.css'
 
-function Login ({ onClose, onSwitchToRegister }) {
+
+function Login ({ onClose, onSwitchToRegister, onLoginSuccess }) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        // Handle login logic here
+
+        if (!email.trim() || !password.trim()) {
+            toast.warning("Vui lòng nhập đầy đủ thông tin!");
+            return;
+        }
+        
+        try{
+            const authData = {
+                email: email,
+                password: password,
+            };
+
+            const resultLogin = await authApi.login(authData);
+
+            // Lưu token
+            localStorage.setItem(
+                "accessToken",
+                resultLogin.data.accessToken
+            );
+
+            // Lưu thông tin người dùng
+            localStorage.setItem(
+                "user",
+                JSON.stringify(resultLogin.data.user)
+            );
+
+            toast.success(
+                resultLogin.data.message || "Đăng nhập thành công!"
+            );
+
+            onLoginSuccess(resultLogin.data.user);
+
+            setTimeout( ()=> {
+                onClose();
+            }, (1000));
+
+
+        } catch (error) {
+            toast.error(
+                error.response?.data?.message || "Đăng nhập thất bại!"
+            );
+
+            console.error("Lỗi đăng nhập: ", error);
+        }
     }
 
     return (

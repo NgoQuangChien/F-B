@@ -1,0 +1,181 @@
+
+/* Bố cục tổng thể */
+.evaluate-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 40px;
+
+    align-items: start;
+    padding: 24px 30px;
+    box-sizing: border-box;
+
+    width: 100%;
+    overflow: visible;
+    background-color: #ffffff;
+}
+
+/* Danh sách đánh giá */
+.evaluate-list {
+    min-width: 0;
+
+    /* Cuộn theo toàn bộ trang */
+    height: auto;
+    overflow: visible;
+
+    /* Ẩn thanh cuộn nếu có */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.evaluate-list::-webkit-scrollbar {
+    display: none;
+}
+
+/* Từng đánh giá */
+.evaluate-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px 10px 22px;
+    border-bottom: 1px solid #d8d4cc;
+}
+
+.evaluate-avatar {
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background-color: #d9d9d9;
+}
+
+.evaluate-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.evaluate-user {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.evaluate-name {
+    color: #292929;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.evaluate-date {
+    color: #777;
+    font-size: 12px;
+}
+
+.evaluate-stars {
+    margin-top: 5px;
+    color: #ffc928;
+    font-size: 17px;
+    letter-spacing: 2px;
+}
+
+.evaluate-content {
+    margin: 8px 0 12px;
+    color: #333;
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+/* Ảnh đánh giá */
+.evaluate-image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 200px;
+    height: 120px;
+
+    border-radius: 8px;
+    background-color: #ebe9e4;
+    color: #333;
+    font-size: 13px;
+}
+
+.evaluate-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.evaluate-images img {
+    width: 100px;
+    height: 85px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Sidebar điểm đánh giá */
+.evaluate-sidebar {
+    position: sticky;
+    top: 20px;
+
+    align-self: start;
+    width: 100%;
+    min-height: 220px;
+    box-sizing: border-box;
+
+    padding: 24px 20px;
+    border: 1px solid #99958d;
+    border-radius: 14px;
+
+    background-color: #faf7ef;
+    z-index: 10;
+}
+
+.evaluate-sidebar-title {
+    margin: 0 0 20px;
+    color: #292929;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.evaluate-rating-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 130px;
+    padding: 16px 10px;
+
+    border: 1px solid #99958d;
+    border-radius: 12px;
+    box-sizing: border-box;
+}
+
+.evaluate-average {
+    color: #292929;
+    font-size: 38px;
+    font-weight: 700;
+}
+
+.evaluate-average span {
+    color: #777;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.evaluate-rating-stars {
+    color: #ffc928;
+    font-size: 20px;
+    letter-spacing: 2px;
+}
+
+.evaluate-rating-box p {
+    margin: 8px 0 0;
+    color: #666;
+    font-size: 13px;
+}
+
+

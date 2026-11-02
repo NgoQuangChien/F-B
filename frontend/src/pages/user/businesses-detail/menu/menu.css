@@ -1,0 +1,92 @@
+.menu-container {
+    display: flex;
+    margin-top: 10px;
+}
+
+.menu-container-left {
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    gap: 20px;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 15px;
+}
+
+.menu-left-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-left-item-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.menu-search {
+    width: 250px;
+    height: 45px;
+    font-size: 16px;
+}
+
+.menu-filter-btn {
+    height: 35px;
+    background-color: #ffffff;
+    border: 1px solid #000000;
+    text-align: center;
+    align-items: center;
+    border-radius: 10px;
+    margin: 3px;
+    font-size: 16px;
+}
+
+.price-max {
+    width: 250px;
+}
+
+.checkbox-input {
+    position: relative;
+    top: 2px;
+    width: 15px;
+    height: 15px;
+}
+
+.checkbox-title {
+    font-size: 16px;
+}
+
+.menu-category {
+    width: 250px;
+    height: 35px;
+    font-size: 16px;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    padding: 0 5px 0 5px;
+}
+
+.menu-category-item {
+    border: 1px solid #000000;
+    border-radius: 10px;
+}
+
+
+.menu-container-right {
+    margin-top: 13px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.menu-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.menu-list-title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: #222222;
+}

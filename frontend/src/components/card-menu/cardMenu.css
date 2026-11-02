@@ -1,0 +1,276 @@
+.card-menu-container {
+    min-width: 0;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #e9e9e9;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-menu-container:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 20px rgba(0, 0, 0, 0.09);
+}
+
+.card-menu-container.is-inactive {
+    opacity: 0.75;
+}
+
+.card-menu-management-top {
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 12px 0;
+}
+
+.card-menu-select {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #555;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.card-menu-select input {
+    width: 15px;
+    height: 15px;
+    accent-color: #e85d35;
+    cursor: pointer;
+}
+
+.card-menu-status {
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.card-menu-status.active {
+    color: #167647;
+    background: #e8f7ef;
+}
+
+.card-menu-status.inactive {
+    color: #777;
+    background: #eeeeee;
+}
+
+.card-menu-image {
+    height: 175px;
+    position: relative;
+    overflow: hidden;
+    background: #f4f4f4;
+}
+
+.card-menu-management-top + .card-menu-image {
+    margin-top: 8px;
+}
+
+.card-menu-image img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.card-menu-container:hover .card-menu-image img {
+    transform: scale(1.04);
+}
+
+.card-menu-badge,
+.card-menu-promotion-badge {
+    position: absolute;
+    top: 10px;
+    padding: 5px 9px;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.card-menu-badge {
+    left: 10px;
+    background: #26845b;
+}
+
+.card-menu-promotion-badge {
+    right: 10px;
+    background: #e84b35;
+}
+
+.card-menu-content {
+    padding: 14px;
+}
+
+.card-menu-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.card-menu-name {
+    margin: 0;
+    color: #222;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.card-menu-category {
+    flex-shrink: 0;
+    padding: 4px 7px;
+    color: #666;
+    background: #f2f2f2;
+    border-radius: 5px;
+    font-size: 10px;
+}
+
+.card-menu-description {
+    min-height: 40px;
+    margin: 9px 0 12px;
+    color: #777;
+    font-size: 13px;
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card-menu-promotion-name {
+    margin: -3px 0 10px;
+    color: #df4c32;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.card-menu-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+}
+
+.card-menu-price-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-menu-price,
+.card-menu-price-discount {
+    color: #e65335;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.card-menu-price-old {
+    color: #999;
+    font-size: 13px;
+    text-decoration: line-through;
+}
+
+.card-menu-button {
+    width: 100%;
+    min-height: 38px;
+    border: none;
+    border-radius: 7px;
+    color: #fff;
+    background: #e85d35;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.card-menu-button:hover {
+    background: #cf4826;
+}
+
+.card-menu-button:disabled {
+    background: #aaa;
+    cursor: not-allowed;
+}
+
+.card-menu-management-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.card-menu-management-actions button {
+    flex: 1;
+    min-height: 32px;
+    padding: 6px 8px;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    background: #fff;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.card-menu-management-actions .card-menu-edit {
+    color: #2366bf;
+    border-color: #cfe0fa;
+    background: #f2f7ff;
+}
+
+.card-menu-management-actions .card-menu-toggle {
+    color: #7554b5;
+    border-color: #e1d7f5;
+    background: #f8f5ff;
+}
+
+.card-menu-management-actions .card-menu-delete {
+    color: #d53f3f;
+    border-color: #f3cece;
+    background: #fff5f5;
+}
+
+.card-menu-price-wrapper {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.card-menu-price-old {
+    color: #888;
+    font-size: 14px;
+    text-decoration: line-through;
+}
+
+.card-menu-price {
+    color: #e74c3c;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.card-menu-discount {
+    padding: 3px 6px;
+    border-radius: 4px;
+    background: #fff0ed;
+    color: #e74c3c;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+@media (max-width: 480px) {
+    .card-menu-image {
+        height: 150px;
+    }
+
+    .card-menu-content {
+        padding: 11px;
+    }
+
+    .card-menu-heading {
+        flex-direction: column;
+    }
+}

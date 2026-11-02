@@ -1,0 +1,35 @@
+
+.manager-layout-container {
+    display: flex;
+    gap: 20px;
+}
+
+.manager-layout-navbar {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #c5c4c4;
+    width: 280px;
+    height: 100vh;
+}
+
+.manager-navbar-item {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #000000;
+    margin: 8px 10px;
+    padding-left: 10px;
+    height: 40px;
+    border: 1px solid #c5c4c4;
+    border-radius: 10px;
+    font-size: 18px;
+}
+
+.manager-navbar-item:hover {
+    background-color: #c9c8c8;
+}
+
+.manager-content {
+    padding: 0 10px;
+    flex: 1;
+}
