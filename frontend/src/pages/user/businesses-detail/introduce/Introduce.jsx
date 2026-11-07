@@ -8,13 +8,6 @@ import DinnerSet from "../../../../components/businesses-service/dinner-set/Dinn
 
 import businessApi from "../../../../api/businessApi";
 
-import {
-    FaMapMarkerAlt,
-    FaRegClock,
-    FaPhone,
-    FaEnvelope,
-    FaExternalLinkAlt
-} from "react-icons/fa";
 
 import "./introduce.css";
 
@@ -99,9 +92,7 @@ function Introduce() {
         );
     }
 
-    // ==============================
     // THÔNG TIN QUÁN
-    // ==============================
 
     const businessName =
         business.businessName || "Chưa cập nhật";
@@ -143,9 +134,7 @@ function Introduce() {
         /https?:\/\/[^\s\])]+/
     )?.[0] || "";
 
-    // ==============================
     // HÌNH ẢNH QUÁN
-    // ==============================
 
     const images = Array.isArray(business.images)
         ? business.images
@@ -156,9 +145,8 @@ function Introduce() {
             .filter((image) => image.imageUrl)
         : [];
 
-    // ==============================
+
     // MỞ GOOGLE MAPS
-    // ==============================
 
     const handleGetDirections = () => {
         if (addressLink) {
@@ -206,45 +194,32 @@ function Introduce() {
                     Thông tin quán
                 </h2>
 
-                {/* Địa chỉ */}
-                <span className="introduce-title-item">
-                    <FaMapMarkerAlt className="introduce-icon" />
-                    Địa chỉ
-                </span>
+                <div className="introduce-info-list">
+                    {/* Địa chỉ */}
+                    <div className="introduce-info-row">
+                        <span className="introduce-title-item">Địa chỉ:</span>
+                        <span className="introduce-item">{address}</span>
+                    </div>
 
-                <span className="introduce-item">
-                    {address}
-                </span>
+                    {/* Số điện thoại */}
+                    <div className="introduce-info-row">
+                        <span className="introduce-title-item">Số điện thoại:</span>
+                        <span className="introduce-item">{phone}</span>
+                    </div>
 
-                {/* Số điện thoại */}
-                <span className="introduce-title-item">
-                    <FaPhone className="introduce-icon" />
-                    Số điện thoại
-                </span>
+                    {/* Email */}
+                    <div className="introduce-info-row">
+                        <span className="introduce-title-item">Email:</span>
+                        <span className="introduce-item">{email}</span>
+                    </div>
 
-                <span className="introduce-item">
-                    {phone}
-                </span>
+                    {/* Trạng thái hoạt động */}
+                    <div className="introduce-info-row">
+                        <span className="introduce-title-item">Trạng thái hoạt động:</span>
+                        <span className="introduce-item">{openStatus}</span>
+                    </div>
 
-                {/* Email */}
-                <span className="introduce-title-item">
-                    <FaEnvelope className="introduce-icon" />
-                    Email
-                </span>
-
-                <span className="introduce-item">
-                    {email}
-                </span>
-
-                {/* Trạng thái hoạt động */}
-                <span className="introduce-title-item">
-                    <FaRegClock className="introduce-icon" />
-                    Trạng thái hoạt động
-                </span>
-
-                <span className="introduce-item">
-                    {openStatus}
-                </span>
+                </div>
 
                 {/* Giới thiệu */}
                 <h2 className="introduce-title">
@@ -327,9 +302,7 @@ function Introduce() {
 
             </div>
 
-            {/* =================================
-                MODAL ĐẶT CHỖ
-            ================================== */}
+            {/* MODAL ĐẶT CHỖ */}
 
             {showDinnerSet && (
                 <DinnerSet

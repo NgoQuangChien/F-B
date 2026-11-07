@@ -19,25 +19,25 @@ function ManageLayout() {
           </NavLink>
         )}
 
-        {hasRole("owner") && (
+        {(hasRole("owner") || hasRole("manage"))&& (
           <NavLink to="thong-tin-quan" className="manager-navbar-item">
             Thông tin quán
           </NavLink>
         )}
 
-        {(hasRole("owner") || hasRole("manager")) && (
+        {(hasRole("owner") || hasRole("manage")) && (
           <NavLink to="quan-ly-thuc-don" className="manager-navbar-item">
             Quản lý thực đơn
           </NavLink>
         )}
 
-        {(hasRole("owner") || hasRole("manager")) && (
+        {(hasRole("owner") || hasRole("manage")) && (
           <NavLink to="quan-ly-dat-cho" className="manager-navbar-item">
             Quản lý đặt chỗ
           </NavLink>
         )}
 
-        {(hasRole("owner") || hasRole("manager")) && (
+        {(hasRole("owner") || hasRole("manage")) && (
           <NavLink to="quan-ly-don-hang" className="manager-navbar-item">
             Quản lý đơn hàng
           </NavLink>
@@ -49,7 +49,7 @@ function ManageLayout() {
           </NavLink>
         )}
 
-        {(hasRole("owner") || hasRole("manager")) && (
+        {(hasRole("owner") || hasRole("manage")) && (
           <NavLink to="danh-gia-va-phan-hoi" className="manager-navbar-item">
             Đánh giá và phản hồi
           </NavLink>

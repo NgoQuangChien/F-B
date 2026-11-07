@@ -143,7 +143,27 @@ function mapBookingData(item) {
 // =====================================================
 export default function ManageBooking() {
   const { id } = useParams();
-  const businessId = id;
+  //const businessId = id;
+
+  // Lấy thông tin tài khoản
+    const [user] = useState(() => {
+        try {
+            return JSON.parse(localStorage.getItem("user")) || null;
+        } catch {
+            return null;
+        }
+    });
+
+    // BusinessId từ URL
+    const businessId = id ? Number(id) : null;
+
+    console.log("===== KIỂM TRA THÔNG TIN =====");
+    console.log("User đăng nhập:", user);
+    console.log("BusinessId từ user:", user?.businessId);
+    console.log("BusinessId từ URL:", id);
+    console.log("BusinessId sử dụng gọi API:", businessId);
+    console.log("URL hiện tại:", window.location.pathname);
+  console.log("ID từ URL:", id);
 
   const [bookings, setBookings] = useState([]);
 

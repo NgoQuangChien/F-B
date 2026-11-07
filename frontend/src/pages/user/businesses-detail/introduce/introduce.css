@@ -2,18 +2,19 @@
 .introduce-container {
     display: flex;
     gap: 10px;
-    margin-left: 10px;
-    margin-right: 10px;
+    margin: 0 10px;
+    align-items: flex-start;
 }
 
-
+/* Khung thông tin */
 .introduce-info-branch {
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
     border: 1px solid #000000;
-    height: 600px;
+    min-height: 600px;
     border-radius: 10px;
-    margin: 20px;
+    margin: 20px 10px;
     padding: 10px 30px;
 }
 
@@ -21,33 +22,62 @@
     width: 75%;
 }
 
-.introduce-info-branch:last-child{
+.introduce-info-branch:last-child {
     width: 25%;
 }
 
+/* Tiêu đề chính */
 .introduce-title {
     color: #C23B22;
+    margin: 10px 0;
 }
 
-.introduce-title-item {
-    font-size: 18px;
-    font-weight: 600;
-    color: #C23B22;
-    padding-top: 5px;
+/* Danh sách thông tin quán */
+.introduce-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 15px;
     padding-left: 10px;
 }
 
+/* Mỗi dòng thông tin */
+.introduce-info-row {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
+    align-items: start;
+    column-gap: 10px;
+}
+
+/* Tiêu đề từng thông tin */
+.introduce-title-item {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+    color: #C23B22;
+    padding: 0;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Nội dung thông tin */
+.introduce-item {
+    display: block;
+    font-size: 18px;
+    padding: 0;
+    margin: 0;
+    line-height: 1.5;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+/* Icon */
 .introduce-icon {
     position: relative;
     top: 1px;
     color: #000000;
     width: 15px;
     height: 15px;
-}
-
-.introduce-item {
-    padding-left: 30px;
-    font-size: 18px;
 }
 
 .icon-status {
@@ -57,12 +87,14 @@
     color: #20ff03;
 }
 
+/* Khu vực hình ảnh */
 .introduce-img-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
+/* Đánh giá */
 .introduce-rating-container {
     display: flex;
     align-items: center;
@@ -77,14 +109,45 @@
     flex-direction: column;
 }
 
-
+/* Bản đồ */
 .introduce-map-container {
-    width: 300px;
-    height: 250px;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
     border: 1px solid #000000;
     border-radius: 10px;
+    background-color: #f5f5f5;
 }
 
+.introduce-map-container iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Nút chỉ đường */
+.introduce-map-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    background-color: #2878d0;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.introduce-map-link:hover {
+    background-color: #1d5fa8;
+}
+
+/* Chi nhánh khác */
 .introduce-other-branch {
     display: flex;
     margin-bottom: 10px;
@@ -106,39 +169,29 @@
     width: 50px;
 }
 
+/* Responsive */
+@media (max-width: 768px) {
+    .introduce-container {
+        flex-direction: column;
+    }
 
+    .introduce-info-branch:first-child,
+    .introduce-info-branch:last-child {
+        width: 100%;
+        margin: 10px 0;
+    }
 
-.introduce-map-container {
-    width: 100%;
-    height: 300px;
-    overflow: hidden;
-    border-radius: 10px;
-    background-color: #f5f5f5;
-}
+    .introduce-info-branch {
+        padding: 10px 15px;
+    }
 
-.introduce-map-container iframe {
-    display: block;
-    width: 100%;
-    height: 100%;
-    border: none;
-}
+    .introduce-info-row {
+        grid-template-columns: 130px minmax(0, 1fr);
+        column-gap: 8px;
+    }
 
-.introduce-map-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 12px;
-    padding: 10px 16px;
-    border: none;
-    border-radius: 6px;
-    background-color: #2878d0;
-    color: white;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.introduce-map-link:hover {
-    background-color: #1d5fa8;
+    .introduce-title-item,
+    .introduce-item {
+        font-size: 16px;
+    }
 }

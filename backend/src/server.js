@@ -11,6 +11,8 @@ const businessesRoute = require("./routes/businessesRoute");
 const dishRoute = require("./routes/dishRoute");
 const categoryRoute = require("./routes/categoryRoute");
 const bookingRoute = require("./routes/bookingRoute");
+const favoriteRoute = require("./routes/favoriteRoute");
+const employeeRoute = require("./routes/employeeRoute");
 
 
 
@@ -35,6 +37,10 @@ app.use("/v1/dishRoute", dishRoute);
 app.use("/v1/categoryRoute", categoryRoute);
 
 app.use("/v1/bookingRoute", bookingRoute);
+
+app.use("/v1/favoriteRoute", favoriteRoute);
+
+app.use("/v1/employeeRoute", employeeRoute);
 
 
 

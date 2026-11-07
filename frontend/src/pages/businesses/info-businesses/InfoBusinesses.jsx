@@ -428,9 +428,6 @@ function InfoBusinesses() {
         cancelEdit("services");
     };
 
-    // =========================
-    // GIAO DIỆN
-    // =========================
 
     return (
         <div className="info-businesses">

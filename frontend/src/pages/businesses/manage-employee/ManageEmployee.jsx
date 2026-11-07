@@ -1,122 +1,104 @@
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
+import { useParams } from "react-router-dom";
+
 import {
     FaPlus,
     FaSearch,
-    FaUserCheck,
-    FaUserMinus,
-    FaTimes
+    FaEye,
+    FaTimes,
+    FaUser,
+    FaEnvelope,
+    FaPhone,
+    FaCalendarAlt,
+    FaIdBadge,
+    FaUserSlash,
+    FaUserCheck
 } from "react-icons/fa";
+
+import employeeApi from "../../../api/employeeApi";
 import "./manageEmployee.css";
 
-const initialBranches = [
-    { id: "all", name: "Tất cả chi nhánh" },
-    { id: "CN01", name: "Chi nhánh Quận 1" },
-    { id: "CN02", name: "Chi nhánh Quận 3" },
-    { id: "CN03", name: "Chi nhánh Bình Thạnh" }
-];
-
-const initialEmployees = [
-    {
-        id: 1,
-        fullname: "Nguyễn Văn An",
-        email: "an@example.com",
-        phone: "0901234567",
-        branchId: "CN01",
-        position: "Quản lý chi nhánh",
-        status: "working",
-        startDate: "10/05/2026"
-    },
-    {
-        id: 2,
-        fullname: "Trần Thị Bình",
-        email: "binh@example.com",
-        phone: "0912345678",
-        branchId: "CN01",
-        position: "Nhân viên",
-        status: "working",
-        startDate: "15/05/2026"
-    },
-    {
-        id: 3,
-        fullname: "Lê Minh Cường",
-        email: "cuong@example.com",
-        phone: "0923456789",
-        branchId: "CN02",
-        position: "Quản lý chi nhánh",
-        status: "working",
-        startDate: "01/06/2026"
-    },
-    {
-        id: 4,
-        fullname: "Phạm Thu Hà",
-        email: "ha@example.com",
-        phone: "0934567890",
-        branchId: "CN02",
-        position: "Nhân viên",
-        status: "resigned",
-        startDate: "20/04/2026"
-    },
-    {
-        id: 5,
-        fullname: "Hoàng Minh Đức",
-        email: "duc@example.com",
-        phone: "0945678901",
-        branchId: "CN03",
-        position: "Nhân viên",
-        status: "working",
-        startDate: "10/07/2026"
-    }
-];
-
 function ManageEmployee() {
-    const [employees, setEmployees] = useState(initialEmployees);
-    const [branches] = useState(initialBranches);
+    const { id } = useParams();
+    const businessId = id ? Number(id) : null;
+
+    const [employees, setEmployees] = useState([]);
+
+    const [loading, setLoading] = useState(true);
+    const [creating, setCreating] = useState(false);
+    const [detailLoading, setDetailLoading] = useState(false);
+
+    // ID nhân viên đang được cập nhật trạng thái
+    const [updatingEmployeeId, setUpdatingEmployeeId] = useState(null);
 
     const [searchTerm, setSearchTerm] = useState("");
-    const [branchFilter, setBranchFilter] = useState("all");
-    const [statusFilter, setStatusFilter] = useState("all");
 
     const [showModal, setShowModal] = useState(false);
-    const [showStatusModal, setShowStatusModal] = useState(false);
+    const [showDetailModal, setShowDetailModal] = useState(false);
+
     const [selectedEmployee, setSelectedEmployee] = useState(null);
 
-    const [statusAction, setStatusAction] = useState("resigned");
-
     const [formData, setFormData] = useState({
-        fullname: "",
+        fullName: "",
         email: "",
         phone: "",
-        branchId: "",
         password: ""
     });
 
+    // =====================================
+    // LẤY DANH SÁCH NHÂN VIÊN
+    // =====================================
+
+    const fetchEmployees = useCallback(async () => {
+        if (!businessId) {
+            setEmployees([]);
+            setLoading(false);
+            return;
+        }
+
+        try {
+            setLoading(true);
+
+            const res = await employeeApi.getEmployees(businessId);
+
+            setEmployees(res.data.data || []);
+
+        } catch (error) {
+            console.error("Lỗi lấy danh sách nhân viên:", error);
+
+            alert(
+                error.response?.data?.message ||
+                "Không thể tải danh sách nhân viên!"
+            );
+        } finally {
+            setLoading(false);
+        }
+    }, [businessId]);
+
+    useEffect(() => {
+        fetchEmployees();
+    }, [fetchEmployees]);
+
+    // =====================================
+    // TÌM KIẾM NHÂN VIÊN
+    // =====================================
+
     const filteredEmployees = useMemo(() => {
+        const keyword = searchTerm.trim().toLowerCase();
+
         return employees.filter((employee) => {
-            const keyword = searchTerm.trim().toLowerCase();
-
-            const matchesSearch =
-                employee.fullname.toLowerCase().includes(keyword) ||
-                employee.email.toLowerCase().includes(keyword) ||
-                employee.phone.includes(keyword);
-
-            const matchesBranch =
-                branchFilter === "all" ||
-                employee.branchId === branchFilter;
-
-            const matchesStatus =
-                statusFilter === "all" ||
-                employee.status === statusFilter;
-
-            return matchesSearch && matchesBranch && matchesStatus;
+            return (
+                employee.fullName?.toLowerCase().includes(keyword) ||
+                employee.email?.toLowerCase().includes(keyword) ||
+                employee.phone?.includes(keyword)
+            );
         });
-    }, [employees, searchTerm, branchFilter, statusFilter]);
+    }, [employees, searchTerm]);
 
-
-    const getBranchName = (branchId) => {
-        return branches.find((branch) => branch.id === branchId)?.name
-            || "Chưa phân chi nhánh";
-    };
+    // =====================================
+    // THAY ĐỔI DỮ LIỆU FORM
+    // =====================================
 
     const handleFormChange = (event) => {
         const { name, value } = event.target;
@@ -127,103 +109,223 @@ function ManageEmployee() {
         }));
     };
 
-    // Tạo tài khoản quản lý chi nhánh mẫu
-    const handleCreateManager = (event) => {
-        event.preventDefault();
+    // =====================================
+    // ĐÓNG MODAL TẠO NHÂN VIÊN
+    // =====================================
 
-        const emailExists = employees.some(
-            (employee) =>
-                employee.email.toLowerCase() ===
-                formData.email.trim().toLowerCase()
-        );
-
-        if (emailExists) {
-            alert("Email này đã tồn tại trong danh sách nhân viên.");
-            return;
-        }
-
-        const newEmployee = {
-            id: Date.now(),
-            fullname: formData.fullname.trim(),
-            email: formData.email.trim(),
-            phone: formData.phone.trim(),
-            branchId: formData.branchId,
-            position: "Quản lý chi nhánh",
-            status: "working",
-            startDate: new Date().toLocaleDateString("vi-VN")
-        };
-
-        setEmployees((previous) => [
-            newEmployee,
-            ...previous
-        ]);
+    const closeModal = () => {
+        if (creating) return;
 
         setShowModal(false);
 
         setFormData({
-            fullname: "",
+            fullName: "",
             email: "",
             phone: "",
-            branchId: "",
             password: ""
         });
     };
 
-    const openStatusModal = (employee, action) => {
-        setSelectedEmployee(employee);
-        setStatusAction(action);
-        setShowStatusModal(true);
+    // =====================================
+    // TẠO TÀI KHOẢN NHÂN VIÊN
+    // =====================================
+
+    const handleCreateEmployee = async (event) => {
+        event.preventDefault();
+
+        if (!businessId) {
+            alert("Không xác định được quán!");
+            return;
+        }
+
+        try {
+            setCreating(true);
+
+            const data = {
+                fullName: formData.fullName.trim(),
+                email: formData.email.trim(),
+                password: formData.password,
+                phone: formData.phone.trim()
+            };
+
+            const res = await employeeApi.createEmployee(
+                businessId,
+                data
+            );
+
+            alert(
+                res.data.message ||
+                "Tạo tài khoản nhân viên thành công!"
+            );
+
+            setShowModal(false);
+
+            setFormData({
+                fullName: "",
+                email: "",
+                phone: "",
+                password: ""
+            });
+
+            await fetchEmployees();
+
+        } catch (error) {
+            console.error("Lỗi tạo nhân viên:", error);
+
+            alert(
+                error.response?.data?.message ||
+                "Không thể tạo tài khoản nhân viên!"
+            );
+        } finally {
+            setCreating(false);
+        }
     };
 
-    const confirmStatusChange = () => {
-        if (!selectedEmployee) return;
+    // =====================================
+    // XEM CHI TIẾT NHÂN VIÊN
+    // =====================================
 
-        setEmployees((previous) =>
-            previous.map((employee) => {
-                if (employee.id !== selectedEmployee.id) {
-                    return employee;
-                }
+    const handleViewDetail = async (employeeId) => {
+        try {
+            setDetailLoading(true);
+            setSelectedEmployee(null);
+            setShowDetailModal(true);
 
-                return {
-                    ...employee,
-                    status: statusAction
-                };
-            })
-        );
+            const res = await employeeApi.getEmployeeDetail(
+                businessId,
+                employeeId
+            );
 
-        setShowStatusModal(false);
+            setSelectedEmployee(res.data.data);
+
+        } catch (error) {
+            console.error("Lỗi lấy chi tiết nhân viên:", error);
+
+            alert(
+                error.response?.data?.message ||
+                "Không thể lấy thông tin nhân viên!"
+            );
+
+            setShowDetailModal(false);
+
+        } finally {
+            setDetailLoading(false);
+        }
+    };
+
+    // =====================================
+    // CHO NGHỈ VIỆC / KÍCH HOẠT NHÂN VIÊN
+    // =====================================
+
+    const handleChangeStatus = async (employee) => {
+        if (!businessId) {
+            alert("Không xác định được quán!");
+            return;
+        }
+
+        const isActive = employee.status === "active";
+
+        const newStatus = isActive ? "inactive" : "active";
+
+        const confirmMessage = isActive
+            ? `Bạn có chắc chắn muốn cho nhân viên "${employee.fullName}" nghỉ việc không? Tài khoản của nhân viên sẽ bị vô hiệu hóa.`
+            : `Bạn có muốn kích hoạt lại tài khoản của nhân viên "${employee.fullName}" không?`;
+
+        if (!window.confirm(confirmMessage)) {
+            return;
+        }
+
+        try {
+            setUpdatingEmployeeId(employee.employeeId);
+
+            const res = await employeeApi.updateEmployeeStatus(
+                businessId,
+                employee.employeeId,
+                newStatus
+            );
+
+            alert(
+                res.data.message ||
+                "Cập nhật trạng thái nhân viên thành công!"
+            );
+
+            // Tải lại danh sách sau khi cập nhật
+            await fetchEmployees();
+
+            // Nếu đang mở chi tiết nhân viên này thì cập nhật luôn
+            if (
+                selectedEmployee?.employeeId === employee.employeeId
+            ) {
+                setSelectedEmployee((previous) => ({
+                    ...previous,
+                    status: newStatus
+                }));
+            }
+
+        } catch (error) {
+            console.error("Lỗi cập nhật trạng thái nhân viên:", error);
+
+            alert(
+                error.response?.data?.message ||
+                "Không thể cập nhật trạng thái nhân viên!"
+            );
+
+        } finally {
+            setUpdatingEmployeeId(null);
+        }
+    };
+
+    // =====================================
+    // ĐỊNH DẠNG NGÀY THÁNG
+    // =====================================
+
+    const formatDate = (date) => {
+        if (!date) return "Chưa có thông tin";
+
+        return new Date(date).toLocaleDateString("vi-VN");
+    };
+
+    // =====================================
+    // ĐÓNG MODAL CHI TIẾT
+    // =====================================
+
+    const closeDetailModal = () => {
+        setShowDetailModal(false);
         setSelectedEmployee(null);
     };
 
-    const closeModal = () => {
-        setShowModal(false);
-        setShowStatusModal(false);
-        setSelectedEmployee(null);
-    };
+    // =====================================
+    // GIAO DIỆN
+    // =====================================
 
     return (
         <div className="employees-page">
+
             {/* Tiêu đề */}
             <div className="employees-header">
                 <div>
                     <h1>Quản lý nhân viên</h1>
+                    <p>
+                        Quản lý tài khoản và thông tin nhân viên của quán.
+                    </p>
                 </div>
 
                 <button
                     type="button"
                     className="employees-add-btn"
                     onClick={() => setShowModal(true)}
+                    disabled={!businessId}
                 >
                     <FaPlus />
-                    <span>Thêm quản lý chi nhánh</span>
+                    <span>Thêm nhân viên</span>
                 </button>
             </div>
 
-
-            {/* Bộ lọc */}
+            {/* Thanh tìm kiếm */}
             <div className="employees-toolbar">
                 <div className="employees-search">
                     <FaSearch />
+
                     <input
                         type="text"
                         value={searchTerm}
@@ -233,203 +335,244 @@ function ManageEmployee() {
                         placeholder="Tìm tên, email, số điện thoại..."
                     />
                 </div>
-
-                <select
-                    value={branchFilter}
-                    onChange={(event) =>
-                        setBranchFilter(event.target.value)
-                    }
-                    aria-label="Lọc theo chi nhánh"
-                >
-                    {branches.map((branch) => (
-                        <option key={branch.id} value={branch.id}>
-                            {branch.name}
-                        </option>
-                    ))}
-                </select>
-
-                <select
-                    value={statusFilter}
-                    onChange={(event) =>
-                        setStatusFilter(event.target.value)
-                    }
-                    aria-label="Lọc theo trạng thái"
-                >
-                    <option value="all">Tất cả trạng thái</option>
-                    <option value="working">Đang làm việc</option>
-                    <option value="resigned">Đã nghỉ việc</option>
-                </select>
             </div>
 
-            {/* Bảng nhân viên */}
+            {/* Bảng danh sách nhân viên */}
             <div className="employees-table-card">
+
                 <div className="employees-table-heading">
                     <h2>Danh sách nhân viên</h2>
-                    <span>{filteredEmployees.length} nhân viên</span>
+
+                    <span>
+                        {filteredEmployees.length} nhân viên
+                    </span>
                 </div>
 
                 <div className="employees-table-wrapper">
                     <table className="employees-table">
+
                         <thead>
                             <tr>
                                 <th>Nhân viên</th>
                                 <th>Liên hệ</th>
-                                <th>Chi nhánh</th>
-                                <th>Chức vụ</th>
-                                <th>Ngày bắt đầu</th>
+                                <th>Ngày tạo tài khoản</th>
                                 <th>Trạng thái</th>
                                 <th>Thao tác</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            {filteredEmployees.map((employee) => (
-                                <tr key={employee.id}>
-                                    <td>
-                                        <div className="employees-person">
-                                            
-                                            <div className="employees-person-info">
-                                                <strong>
-                                                    {employee.fullname}
-                                                </strong>
+
+                            {loading ? (
+                                <tr>
+                                    <td colSpan="5" className="employees-empty">
+                                        Đang tải danh sách nhân viên...
+                                    </td>
+                                </tr>
+
+                            ) : filteredEmployees.length > 0 ? (
+
+                                filteredEmployees.map((employee) => (
+                                    <tr key={employee.employeeId}>
+
+                                        {/* Thông tin nhân viên */}
+                                        <td>
+                                            <div className="employees-person">
+
+                                                <div className="employees-avatar">
+                                                    {employee.fullName
+                                                        ?.charAt(0)
+                                                        .toUpperCase()}
+                                                </div>
+
+                                                <div className="employees-person-info">
+                                                    <strong>
+                                                        {employee.fullName}
+                                                    </strong>
+
+                                                    <span>
+                                                        Mã NV: {employee.employeeId}
+                                                    </span>
+                                                </div>
+
+                                            </div>
+                                        </td>
+
+                                        {/* Liên hệ */}
+                                        <td>
+                                            <div className="employees-contact">
                                                 <span>
-                                                    Mã NV: {employee.id}
+                                                    {employee.email}
+                                                </span>
+
+                                                <span>
+                                                    {employee.phone || "Chưa cập nhật"}
                                                 </span>
                                             </div>
-                                        </div>
-                                    </td>
+                                        </td>
 
-                                    <td>
-                                        <div className="employees-contact">
-                                            <span>{employee.email}</span>
-                                            <span>{employee.phone}</span>
-                                        </div>
-                                    </td>
+                                        {/* Ngày tạo */}
+                                        <td>
+                                            {formatDate(employee.createdAt)}
+                                        </td>
 
-                                    <td>
-                                        {getBranchName(employee.branchId)}
-                                    </td>
+                                        {/* Trạng thái */}
+                                        <td>
+                                            <span
+                                                className={`employees-status ${
+                                                    employee.status === "active"
+                                                        ? "status-working"
+                                                        : "status-resigned"
+                                                }`}
+                                            >
+                                                <span className="employees-status-dot" />
 
-                                    <td>
-                                        <span
-                                            className={`employees-position ${
-                                                employee.position ===
-                                                "Quản lý chi nhánh"
-                                                    ? "manager-position"
-                                                    : ""
-                                            }`}
-                                        >
-                                            {employee.position}
-                                        </span>
-                                    </td>
+                                                {employee.status === "active"
+                                                    ? "Đang hoạt động"
+                                                    : "Đã nghỉ việc"}
+                                            </span>
+                                        </td>
 
-                                    <td>{employee.startDate}</td>
+                                        {/* Thao tác */}
+                                        <td>
+                                            <div className="employees-row-actions">
 
-                                    <td>
-                                        <span
-                                            className={`employees-status ${
-                                                employee.status === "working"
-                                                    ? "status-working"
-                                                    : "status-resigned"
-                                            }`}
-                                        >
-                                            <span className="employees-status-dot" />
-                                            {employee.status === "working"
-                                                ? "Đang làm việc"
-                                                : "Đã nghỉ việc"}
-                                        </span>
-                                    </td>
-
-                                    <td>
-                                        <div className="employees-row-actions">
-                                            {employee.status === "working" ? (
+                                                {/* Xem chi tiết */}
                                                 <button
                                                     type="button"
-                                                    className="employees-action-btn dismiss"
-                                                    title="Cho nghỉ việc"
+                                                    className="employees-action-btn view"
+                                                    title="Xem chi tiết"
                                                     onClick={() =>
-                                                        openStatusModal(
-                                                            employee,
-                                                            "resigned"
+                                                        handleViewDetail(
+                                                            employee.employeeId
                                                         )
                                                     }
                                                 >
-                                                    <FaUserMinus />
-                                                    <span>Cho nghỉ việc</span>
+                                                    <FaEye />
+                                                    <span>Chi tiết</span>
                                                 </button>
-                                            ) : (
-                                                <button
-                                                    type="button"
-                                                    className="employees-action-btn restore"
-                                                    title="Khôi phục làm việc"
-                                                    onClick={() =>
-                                                        openStatusModal(
-                                                            employee,
-                                                            "working"
-                                                        )
-                                                    }
-                                                >
-                                                    <FaUserCheck />
-                                                    <span>Khôi phục</span>
-                                                </button>
-                                            )}
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
 
-                            {filteredEmployees.length === 0 && (
+                                                {/* Cho nghỉ việc */}
+                                                {employee.status === "active" ? (
+                                                    <button
+                                                        type="button"
+                                                        className="employees-action-btn resign"
+                                                        title="Cho nghỉ việc"
+                                                        disabled={
+                                                            updatingEmployeeId === employee.employeeId
+                                                        }
+                                                        onClick={() =>
+                                                            handleChangeStatus(employee)
+                                                        }
+                                                    >
+                                                        <FaUserSlash />
+
+                                                        <span>
+                                                            {updatingEmployeeId === employee.employeeId
+                                                                ? "Đang xử lý..."
+                                                                : "Cho nghỉ việc"}
+                                                        </span>
+                                                    </button>
+
+                                                ) : (
+
+                                                    /* Kích hoạt lại */
+                                                    <button
+                                                        type="button"
+                                                        className="employees-action-btn activate"
+                                                        title="Kích hoạt lại"
+                                                        disabled={
+                                                            updatingEmployeeId === employee.employeeId
+                                                        }
+                                                        onClick={() =>
+                                                            handleChangeStatus(employee)
+                                                        }
+                                                    >
+                                                        <FaUserCheck />
+
+                                                        <span>
+                                                            {updatingEmployeeId === employee.employeeId
+                                                                ? "Đang xử lý..."
+                                                                : "Kích hoạt"}
+                                                        </span>
+                                                    </button>
+
+                                                )}
+
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                ))
+
+                            ) : (
+
                                 <tr>
                                     <td
-                                        colSpan="7"
+                                        colSpan="5"
                                         className="employees-empty"
                                     >
-                                        Không tìm thấy nhân viên phù hợp.
+                                        {searchTerm
+                                            ? "Không tìm thấy nhân viên phù hợp."
+                                            : "Quán chưa có nhân viên nào."}
                                     </td>
                                 </tr>
+
                             )}
+
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            {/* Modal tạo quản lý */}
+            {/* =====================================
+                MODAL TẠO TÀI KHOẢN NHÂN VIÊN
+            ===================================== */}
+
             {showModal && (
                 <div
                     className="employees-modal-backdrop"
                     onMouseDown={(event) => {
-                        if (event.target === event.currentTarget) {
+                        if (
+                            event.target === event.currentTarget &&
+                            !creating
+                        ) {
                             closeModal();
                         }
                     }}
                 >
                     <div className="employees-modal">
+
                         <div className="employees-modal-header">
                             <div>
-                                <h2>Thêm quản lý chi nhánh</h2>
+                                <h2>Thêm nhân viên</h2>
+
                                 <p>
-                                    Tạo thông tin và tài khoản cho quản lý mới.
+                                    Tạo tài khoản đăng nhập cho nhân viên quản lý quán.
                                 </p>
                             </div>
 
                             <button
                                 type="button"
                                 onClick={closeModal}
+                                disabled={creating}
                                 aria-label="Đóng"
                             >
                                 <FaTimes />
                             </button>
                         </div>
 
-                        <form onSubmit={handleCreateManager}>
+                        <form onSubmit={handleCreateEmployee}>
+
                             <div className="employees-form-group">
-                                <label htmlFor="fullname">
+                                <label htmlFor="fullName">
                                     Họ và tên
                                 </label>
+
                                 <input
-                                    id="fullname"
-                                    name="fullname"
-                                    value={formData.fullname}
+                                    id="fullName"
+                                    name="fullName"
+                                    value={formData.fullName}
                                     onChange={handleFormChange}
                                     placeholder="Nhập họ và tên"
                                     required
@@ -440,6 +583,7 @@ function ManageEmployee() {
                                 <label htmlFor="email">
                                     Email đăng nhập
                                 </label>
+
                                 <input
                                     id="email"
                                     name="email"
@@ -455,6 +599,7 @@ function ManageEmployee() {
                                 <label htmlFor="phone">
                                     Số điện thoại
                                 </label>
+
                                 <input
                                     id="phone"
                                     name="phone"
@@ -469,39 +614,10 @@ function ManageEmployee() {
                             </div>
 
                             <div className="employees-form-group">
-                                <label htmlFor="branchId">
-                                    Chi nhánh phụ trách
-                                </label>
-                                <select
-                                    id="branchId"
-                                    name="branchId"
-                                    value={formData.branchId}
-                                    onChange={handleFormChange}
-                                    required
-                                >
-                                    <option value="">
-                                        -- Chọn chi nhánh --
-                                    </option>
-
-                                    {branches
-                                        .filter(
-                                            (branch) => branch.id !== "all"
-                                        )
-                                        .map((branch) => (
-                                            <option
-                                                key={branch.id}
-                                                value={branch.id}
-                                            >
-                                                {branch.name}
-                                            </option>
-                                        ))}
-                                </select>
-                            </div>
-
-                            <div className="employees-form-group">
                                 <label htmlFor="password">
                                     Mật khẩu ban đầu
                                 </label>
+
                                 <input
                                     id="password"
                                     name="password"
@@ -516,15 +632,18 @@ function ManageEmployee() {
                             </div>
 
                             <div className="employees-form-note">
-                                Quản lý được tạo sẽ có quyền quản lý
-                                chi nhánh đã chọn.
+                                Tài khoản được tạo sẽ có quyền quản lý quán
+                                hiện tại. Nhân viên có thể sử dụng email và
+                                mật khẩu này để đăng nhập.
                             </div>
 
                             <div className="employees-modal-actions">
+
                                 <button
                                     type="button"
                                     className="employees-cancel-btn"
                                     onClick={closeModal}
+                                    disabled={creating}
                                 >
                                     Hủy
                                 </button>
@@ -532,68 +651,210 @@ function ManageEmployee() {
                                 <button
                                     type="submit"
                                     className="employees-submit-btn"
+                                    disabled={creating}
                                 >
-                                    Tạo tài khoản
+                                    {creating
+                                        ? "Đang tạo..."
+                                        : "Tạo tài khoản"}
                                 </button>
+
                             </div>
                         </form>
                     </div>
                 </div>
             )}
 
-            {/* Modal xác nhận nghỉ việc / khôi phục */}
-            {showStatusModal && selectedEmployee && (
+            {/* =====================================
+                MODAL XEM CHI TIẾT NHÂN VIÊN
+            ===================================== */}
+
+            {showDetailModal && (
                 <div
                     className="employees-modal-backdrop"
                     onMouseDown={(event) => {
                         if (event.target === event.currentTarget) {
-                            closeModal();
+                            closeDetailModal();
                         }
                     }}
                 >
-                    <div className="employees-confirm-modal">
-                        <div className="employees-confirm-icon">
-                            {statusAction === "resigned" ? (
-                                <FaUserMinus />
-                            ) : (
-                                <FaUserCheck />
-                            )}
-                        </div>
+                    <div className="employees-detail-modal">
 
-                        <h2>
-                            {statusAction === "resigned"
-                                ? "Xác nhận cho nghỉ việc?"
-                                : "Khôi phục làm việc?"}
-                        </h2>
+                        <div className="employees-modal-header">
+                            <div>
+                                <h2>Thông tin nhân viên</h2>
 
-                        <p>
-                            {statusAction === "resigned"
-                                ? `Bạn có chắc muốn chuyển ${selectedEmployee.fullname} sang trạng thái đã nghỉ việc?`
-                                : `Bạn có chắc muốn khôi phục trạng thái làm việc cho ${selectedEmployee.fullname}?`}
-                        </p>
-
-                        <div className="employees-modal-actions">
-                            <button
-                                type="button"
-                                className="employees-cancel-btn"
-                                onClick={closeModal}
-                            >
-                                Hủy
-                            </button>
+                                <p>
+                                    Chi tiết tài khoản nhân viên quản lý.
+                                </p>
+                            </div>
 
                             <button
                                 type="button"
-                                className="employees-submit-btn"
-                                onClick={confirmStatusChange}
+                                onClick={closeDetailModal}
+                                aria-label="Đóng"
                             >
-                                Xác nhận
+                                <FaTimes />
                             </button>
                         </div>
+
+                        {detailLoading ? (
+
+                            <div className="employees-detail-loading">
+                                Đang tải thông tin nhân viên...
+                            </div>
+
+                        ) : selectedEmployee ? (
+
+                            <>
+                                <div className="employees-detail-profile">
+
+                                    <div className="employees-detail-avatar">
+                                        {selectedEmployee.fullName
+                                            ?.charAt(0)
+                                            .toUpperCase()}
+                                    </div>
+
+                                    <h3>
+                                        {selectedEmployee.fullName}
+                                    </h3>
+
+                                    <span className="employees-position manager-position">
+                                        Nhân viên quản lý
+                                    </span>
+
+                                    <span
+                                        className={`employees-status ${
+                                            selectedEmployee.status === "active"
+                                                ? "status-working"
+                                                : "status-resigned"
+                                        }`}
+                                    >
+                                        <span className="employees-status-dot" />
+
+                                        {selectedEmployee.status === "active"
+                                            ? "Đang hoạt động"
+                                            : "Đã nghỉ việc"}
+                                    </span>
+                                </div>
+
+                                <div className="employees-detail-information">
+
+                                    <div className="employees-detail-item">
+                                        <div className="employees-detail-icon">
+                                            <FaIdBadge />
+                                        </div>
+
+                                        <div>
+                                            <span>Mã nhân viên</span>
+                                            <strong>
+                                                NV{selectedEmployee.employeeId}
+                                            </strong>
+                                        </div>
+                                    </div>
+
+                                    <div className="employees-detail-item">
+                                        <div className="employees-detail-icon">
+                                            <FaUser />
+                                        </div>
+
+                                        <div>
+                                            <span>Họ và tên</span>
+                                            <strong>
+                                                {selectedEmployee.fullName}
+                                            </strong>
+                                        </div>
+                                    </div>
+
+                                    <div className="employees-detail-item">
+                                        <div className="employees-detail-icon">
+                                            <FaEnvelope />
+                                        </div>
+
+                                        <div>
+                                            <span>Email đăng nhập</span>
+                                            <strong>
+                                                {selectedEmployee.email}
+                                            </strong>
+                                        </div>
+                                    </div>
+
+                                    <div className="employees-detail-item">
+                                        <div className="employees-detail-icon">
+                                            <FaPhone />
+                                        </div>
+
+                                        <div>
+                                            <span>Số điện thoại</span>
+                                            <strong>
+                                                {selectedEmployee.phone || "Chưa cập nhật"}
+                                            </strong>
+                                        </div>
+                                    </div>
+
+                                    <div className="employees-detail-item">
+                                        <div className="employees-detail-icon">
+                                            <FaCalendarAlt />
+                                        </div>
+
+                                        <div>
+                                            <span>Ngày tạo tài khoản</span>
+                                            <strong>
+                                                {formatDate(selectedEmployee.createdAt)}
+                                            </strong>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div className="employees-modal-actions">
+
+                                    {/* Thay đổi trạng thái ngay trong modal */}
+                                    <button
+                                        type="button"
+                                        className={
+                                            selectedEmployee.status === "active"
+                                                ? "employees-cancel-btn"
+                                                : "employees-submit-btn"
+                                        }
+                                        disabled={
+                                            updatingEmployeeId === selectedEmployee.employeeId
+                                        }
+                                        onClick={() =>
+                                            handleChangeStatus(selectedEmployee)
+                                        }
+                                    >
+                                        {selectedEmployee.status === "active" ? (
+                                            <>
+                                                <FaUserSlash />
+                                                Cho nghỉ việc
+                                            </>
+                                        ) : (
+                                            <>
+                                                <FaUserCheck />
+                                                Kích hoạt lại
+                                            </>
+                                        )}
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        className="employees-submit-btn"
+                                        onClick={closeDetailModal}
+                                    >
+                                        Đóng
+                                    </button>
+
+                                </div>
+                            </>
+
+                        ) : null}
+
                     </div>
                 </div>
             )}
+
         </div>
     );
 }
 
-export default ManageEmployee
+export default ManageEmployee;

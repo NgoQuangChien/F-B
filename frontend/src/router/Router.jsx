@@ -24,6 +24,7 @@ import Evaluate from '../pages/user/businesses-detail/evaluate/Evaluate'
 import Delivery from '../pages/shipper/delivery/Delivery'
 import Search from '../pages/user/search/Search'
 import Food from '../pages/user/food/Food'
+import Favorite from '../pages/user/favorite/Favorite'
 
 
 // Layout
@@ -45,7 +46,7 @@ function AppRouter() {
           { path: '/dang-ky-ho-so-quan', element: <BusinessesProfile/>},
           { path: '/dang-ky-ho-so-giao-hang', element: <ShipperProfile/>},
           { path: '/tim-kiem', element: <Search/>},
-
+          { path: '/yeu-thich', element: <Favorite/>},
           { path: '/quan-cua-toi', element: <MyBusinesses/>},
           { path: '/thong-tin-chi-tiet-quan/:businessId',
             element: <BusinessesDetailLayout/>,

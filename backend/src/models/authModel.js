@@ -21,15 +21,24 @@ const authModel = {
     // Lấy thông tin người dùng qua email
     getUserByEmail: async (email) => {
         const sql = `
-            SELECT userId, fullname, email, password, avatar
-            FROM users
-            WHERE email = ?
+            SELECT
+                u.userId,
+                u.fullname,
+                u.email,
+                u.password,
+                u.avatar,
+                e.businessId
+            FROM users u
+            LEFT JOIN employees e
+                ON u.userId = e.userId
+                AND e.status = 'active'
+            WHERE u.email = ?
             LIMIT 1
         `;
 
         const [rows] = await pool.execute(sql, [email]);
 
-        if (rows.length > 0){
+        if (rows.length > 0) {
             return rows[0];
         } else {
             return null;

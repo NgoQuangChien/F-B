@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useParams } from 'react-router-dom';
 
@@ -5,6 +6,8 @@ import { FaHeart } from 'react-icons/fa6';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 
 import businessApi from '../../../api/businessApi';
+import favoriteApi from '../../../api/favoriteApi';
+
 import DinnerSet from '../../businesses-service/dinner-set/DinnerSet';
 
 import './businessesDetailLayout.css';
@@ -14,7 +17,12 @@ function BusinessesDetailLayout() {
 
     const [business, setBusiness] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [favoriteLoading, setFavoriteLoading] = useState(false);
+
     const [showDinnerSet, setShowDinnerSet] = useState(false);
+    const [isFavorite, setIsFavorite] = useState(false);
+
+    const user = JSON.parse(localStorage.getItem("user") || "null");
 
     // Lấy thông tin quán
     useEffect(() => {
@@ -37,14 +45,75 @@ function BusinessesDetailLayout() {
         }
     }, [businessId]);
 
-    if (loading) {
-        return <div>Đang tải thông tin quán...</div>;
-    }
+    // Kiểm tra quán đã được yêu thích chưa
+    useEffect(() => {
+        if (!user || !businessId) {
+            setIsFavorite(false);
+            return;
+        }
 
-    if (!business) {
-        return <div>Không tìm thấy thông tin quán.</div>;
-    }
+        const checkFavorite = async () => {
+            try {
+                const res = await favoriteApi.getFavorites();
 
+                const exists = res.data.data.some(
+                    item => Number(item.businessId) === Number(businessId)
+                );
+
+                setIsFavorite(exists);
+            } catch (error) {
+                console.error("Lỗi kiểm tra yêu thích:", error);
+            }
+        };
+
+        checkFavorite();
+    }, [businessId]);
+
+    // Xử lý yêu thích
+    const handleFavorite = async () => {
+        if (!user) {
+            alert("Vui lòng đăng nhập để sử dụng chức năng yêu thích.");
+            return;
+        }
+
+        if (favoriteLoading) return;
+
+        try {
+            setFavoriteLoading(true);
+
+            if (isFavorite) {
+                await favoriteApi.removeFavorite(businessId);
+                setIsFavorite(false);
+            } else {
+                await favoriteApi.addFavorite(businessId);
+                setIsFavorite(true);
+            }
+        } catch (error) {
+            console.error("Lỗi xử lý yêu thích:", error);
+            alert("Không thể thực hiện thao tác. Vui lòng thử lại.");
+        } finally {
+            setFavoriteLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        console.log("Trạng thái yêu thích:", isFavorite);
+    }, [isFavorite]);
+
+    useEffect(() => {
+        const button = document.querySelector(
+            ".businesses-detail-actions-btn.icon-heart"
+        );
+
+        if (button) {
+            console.log("Favorite state:", isFavorite);
+            console.log("Button class:", button.className);
+            console.log("Button color:", getComputedStyle(button).color);
+            console.log("Icon fill:", getComputedStyle(button.querySelector("svg")).fill);
+        }
+    }, [isFavorite]);
+
+    // Chỉ đường
     const handleGetDirections = () => {
         if (business.addressLink) {
             window.open(business.addressLink, "_blank", "noopener,noreferrer");
@@ -59,9 +128,17 @@ function BusinessesDetailLayout() {
         }
     };
 
+    if (loading) {
+        return <div>Đang tải thông tin quán...</div>;
+    }
+
+    if (!business) {
+        return <div>Không tìm thấy thông tin quán.</div>;
+    }
+
     return (
         <div className='businesses-detail-header'>
-            
+
             <div className="businesses-detail-banner">
                 {business.latitude != null &&
                 business.longitude != null &&
@@ -87,7 +164,6 @@ function BusinessesDetailLayout() {
                     </div>
                 )}
             </div>
-        
 
             <div className='businesses-detail-header-top'>
                 <div className='businesses-detail-info'>
@@ -101,18 +177,31 @@ function BusinessesDetailLayout() {
                 </div>
 
                 <div className='businesses-detail-actions'>
-                    <button className='businesses-detail-actions-btn icon-heart'>
+
+                    <button
+                        type="button"
+                        className={`businesses-detail-actions-btn icon-heart ${
+                            isFavorite ? "active" : ""
+                        }`}
+                        onClick={handleFavorite}
+                        disabled={favoriteLoading}
+                        title={isFavorite ? "Bỏ yêu thích" : "Thêm vào yêu thích"}
+                    >
                         <FaHeart />
                     </button>
 
                     <button
+                        type="button"
                         className='businesses-detail-actions-btn booking-btn'
                         onClick={() => setShowDinnerSet(true)}
                     >
                         Đặt bàn
                     </button>
 
-                    <button className='businesses-detail-actions-btn booking-btn'>
+                    <button
+                        type="button"
+                        className='businesses-detail-actions-btn booking-btn'
+                    >
                         Đặt đồ
                     </button>
 

@@ -1,0 +1,344 @@
+/* ==============================
+   TRANG QUÁN YÊU THÍCH
+============================== */
+
+.favorite-page {
+    width: 100%;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 30px;
+    box-sizing: border-box;
+}
+
+/* Header */
+
+.favorite-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.favorite-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #222;
+    margin: 0 0 8px;
+}
+
+.favorite-header p {
+    font-size: 14px;
+    color: #777;
+    margin: 0;
+}
+
+.favorite-count {
+    padding: 8px 14px;
+    background: #fff0f0;
+    color: #C23B22;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* ==============================
+   DANH SÁCH QUÁN
+============================== */
+
+.favorite-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* ==============================
+   CARD QUÁN
+============================== */
+
+.favorite-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    width: 100%;
+    min-height: 150px;
+    padding: 15px;
+
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    box-sizing: border-box;
+
+    transition: all 0.2s ease;
+}
+
+.favorite-card:hover {
+    border-color: #ddd;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Ảnh quán */
+
+.favorite-card-image {
+    flex-shrink: 0;
+    width: 180px;
+    height: 120px;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #f1f1f1;
+}
+
+.favorite-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Thông tin quán */
+
+.favorite-card-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.favorite-card-info h3 {
+    margin: 0 0 12px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+}
+
+/* Địa chỉ */
+
+.favorite-card-address {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 14px;
+
+    font-size: 14px;
+    color: #777;
+}
+
+.favorite-card-address svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: #C23B22;
+}
+
+/* Loại hình và đánh giá */
+
+.favorite-card-details {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.favorite-type {
+    padding: 5px 10px;
+    background: #f5f5f5;
+    border-radius: 5px;
+    color: #555;
+    font-size: 13px;
+}
+
+.favorite-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #e6a100;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* ==============================
+   MENU BA CHẤM
+============================== */
+
+.favorite-card-menu {
+    position: relative;
+    align-self: flex-start;
+    flex-shrink: 0;
+}
+
+.favorite-menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 36px;
+    height: 36px;
+
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+
+    color: #777;
+    font-size: 16px;
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.favorite-menu-btn:hover {
+    background: #f2f2f2;
+    color: #333;
+}
+
+/* Dropdown */
+
+.favorite-dropdown {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    z-index: 10;
+
+    width: 100px;
+    height: 35px;
+
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.favorite-dropdown button {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    width: 100%;
+    padding: 10px;
+
+    border: none;
+    border-radius: 5px;
+    background: transparent;
+
+    color: #e53935;
+    font-size: 14px;
+    text-align: left;
+
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.favorite-dropdown button:hover {
+    background: #fff0f0;
+}
+
+/* ==============================
+   DANH SÁCH TRỐNG
+============================== */
+
+.favorite-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 65px 20px;
+
+    background: #fafafa;
+    border: 1px dashed #ddd;
+    border-radius: 12px;
+
+    text-align: center;
+}
+
+.favorite-empty > svg {
+    font-size: 45px;
+    color: #e5a5a5;
+    margin-bottom: 15px;
+}
+
+.favorite-empty h3 {
+    margin: 0 0 10px;
+    font-size: 20px;
+    color: #333;
+}
+
+.favorite-empty p {
+    max-width: 450px;
+    margin: 0;
+    color: #777;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* Loading */
+
+.favorite-loading {
+    padding: 40px;
+    text-align: center;
+    color: #777;
+}
+
+/* ==============================
+   RESPONSIVE
+============================== */
+
+@media (max-width: 768px) {
+    .favorite-page {
+        margin: 25px auto;
+        padding: 0 15px;
+    }
+
+    .favorite-header h2 {
+        font-size: 23px;
+    }
+
+    .favorite-card {
+        gap: 12px;
+        padding: 12px;
+    }
+
+    .favorite-card-image {
+        width: 120px;
+        height: 100px;
+    }
+
+    .favorite-card-info h3 {
+        font-size: 17px;
+    }
+
+    .favorite-card-address {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .favorite-header {
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .favorite-count {
+        white-space: nowrap;
+        font-size: 12px;
+    }
+
+    .favorite-card {
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .favorite-card-image {
+        width: 95px;
+        height: 90px;
+    }
+
+    .favorite-card-info h3 {
+        font-size: 15px;
+        margin-bottom: 8px;
+    }
+
+    .favorite-card-details {
+        gap: 8px;
+    }
+}
