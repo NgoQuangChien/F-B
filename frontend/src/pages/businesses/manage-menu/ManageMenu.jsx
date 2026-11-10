@@ -366,9 +366,8 @@ function ManageMenu() {
         );
     };
 
-    // ========================================
+
     // GIAO DIỆN
-    // ========================================
 
     return (
         <div className="manage-menu-page">

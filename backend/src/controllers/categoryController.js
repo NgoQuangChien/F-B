@@ -51,6 +51,39 @@ const categoryController = {
             });
         }
     },
+
+    // Tạo danh mục mới
+    createCategory: async (req, res) => {
+        try {
+            const { categoryName } = req.body;
+
+            // Kiểm tra dữ liệu
+            if (!categoryName || !categoryName.trim()) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Vui lòng nhập tên danh mục",
+                });
+            }
+
+            const category = await categoryModel.createCategory(categoryName);
+
+            return res.status(201).json({
+                success: true,
+                message: category.isNew
+                    ? "Thêm danh mục thành công"
+                    : "Danh mục đã tồn tại",
+                data: category,
+            });
+
+        } catch (error) {
+            console.error("Lỗi tạo danh mục:", error);
+
+            return res.status(500).json({
+                success: false,
+                message: "Lỗi server khi tạo danh mục",
+            });
+        }
+    },
 };
 
 module.exports = categoryController;

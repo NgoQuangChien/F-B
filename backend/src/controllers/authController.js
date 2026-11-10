@@ -1,4 +1,5 @@
 const authModel = require("../models/authModel");
+const employeeModel = require("../models/employeeModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -103,9 +104,10 @@ const authController = {
         }
     },
 
+    
     login: async (req, res) => {
         try {
-            const {email, password} = req.body;
+            const { email, password } = req.body;
 
             const normalizedEmail = email.trim();
             const normalizedPassword = password.trim();
@@ -116,15 +118,20 @@ const authController = {
                 });
             }
 
+            // 1. Tìm tài khoản theo email
             const user = await authModel.getUserByEmail(normalizedEmail);
 
-            if(!user) {
+            if (!user) {
                 return res.status(401).json({
                     message: "Email hoặc mật khẩu không chính xác!"
-                })
+                });
             }
 
-            const isPasswordCorrect = await bcrypt.compare(normalizedPassword, user.password);
+            // 2. Kiểm tra mật khẩu
+            const isPasswordCorrect = await bcrypt.compare(
+                normalizedPassword,
+                user.password
+            );
 
             if (!isPasswordCorrect) {
                 return res.status(401).json({
@@ -132,30 +139,54 @@ const authController = {
                 });
             }
 
+            // 3. Lấy danh sách quyền của tài khoản
             const roles = await authModel.getUserRoles(user.userId);
 
+            // 4. Kiểm tra trạng thái nhân viên quản lý
+            const isManager = roles.some(
+                role => role.roleName === "manage"
+            );
+
+            if (isManager) {
+                const employee =
+                    await employeeModel.getEmployeeBusinessByUserId(
+                        user.userId
+                    );
+
+                if (!employee) {
+                    return res.status(403).json({
+                        success: false,
+                        message: "Tài khoản nhân viên đã bị vô hiệu hóa!"
+                    });
+                }
+            }
+
+            // 5. Tạo access token sau khi đã kiểm tra hợp lệ
             const accessToken = generateAccessToken(user, roles);
 
+            // 6. Loại bỏ mật khẩu khỏi thông tin trả về
             const { password: userPassword, ...otherInfo } = user;
 
             return res.status(200).json({
+                success: true,
                 message: "Đăng nhập thành công!",
                 user: {
                     ...otherInfo,
                     roles
                 },
-                accessToken: accessToken
+                accessToken
             });
-            
 
-        } catch(error){
+        } catch (error) {
             console.error("Lỗi đăng nhập:", error);
 
             return res.status(500).json({
-                message: "Đã xảy ra lỗi khi đăng nhập"
+                success: false,
+                message: "Đã xảy ra lỗi khi đăng nhập!"
             });
         }
     }
+
 }
 
 module.exports = authController

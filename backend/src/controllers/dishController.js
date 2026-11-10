@@ -3,10 +3,8 @@ const { Readable } = require("stream");
 const cloudinary = require("../configs/cloudinary");
 const dishModel = require("../models/dishModel");
 
-// ========================================
-// HÀM UPLOAD ẢNH LÊN CLOUDINARY
-// ========================================
-const uploadImage = async (file) => {
+// Upload ảnh lên Cloudinary
+const uploadImage = (file) => {
     return new Promise((resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
             {
@@ -15,10 +13,10 @@ const uploadImage = async (file) => {
             },
             (error, result) => {
                 if (error) {
-                    reject(error);
-                } else {
-                    resolve(result);
+                    return reject(error);
                 }
+
+                resolve(result);
             }
         );
 
@@ -26,46 +24,61 @@ const uploadImage = async (file) => {
     });
 };
 
-// ========================================
-// LẤY PUBLIC ID TỪ URL CLOUDINARY
-// ========================================
+
+// Lấy publicId từ URL Cloudinary
 const getPublicId = (imageUrl) => {
     if (!imageUrl) return null;
 
     try {
         const url = new URL(imageUrl);
-        const pathname = decodeURIComponent(url.pathname);
+        const pathname = url.pathname;
 
         const uploadIndex = pathname.indexOf("/upload/");
-
         if (uploadIndex === -1) return null;
 
         let publicId = pathname.substring(uploadIndex + 8);
 
-        // Bỏ version, ví dụ v123456789/
+        // Bỏ version v123456789 nếu có
         publicId = publicId.replace(/^v\d+\//, "");
 
-        // Bỏ phần mở rộng ảnh
+        // Bỏ phần đuôi file
         publicId = publicId.replace(/\.[^/.]+$/, "");
 
         return publicId;
     } catch (error) {
-        console.error("Lỗi lấy public_id:", error);
         return null;
     }
 };
 
-// ========================================
-// DISH CONTROLLER
-// ========================================
+
+// Chuyển sizes từ FormData thành mảng
+const parseSizes = (sizes) => {
+    if (sizes === undefined || sizes === null || sizes === "") {
+        return [];
+    }
+
+    if (Array.isArray(sizes)) {
+        return sizes;
+    }
+
+    try {
+        const parsedSizes = JSON.parse(sizes);
+
+        if (!Array.isArray(parsedSizes)) {
+            throw new Error("Danh sách size phải là một mảng");
+        }
+
+        return parsedSizes;
+    } catch (error) {
+        throw new Error("Dữ liệu size không hợp lệ");
+    }
+};
+
+
 const dishController = {
 
-    // ====================================
-    // THÊM MÓN ĂN
-    // ====================================
+    // Thêm món ăn
     createDish: async (req, res) => {
-        let uploadedImagePublicId = null;
-
         try {
             const {
                 businessId,
@@ -76,175 +89,105 @@ const dishController = {
                 dishType
             } = req.body;
 
-            // Kiểm tra dữ liệu bắt buộc
-            if (
-                !businessId ||
-                !categoryId ||
-                !dishName?.trim() ||
-                price == null ||
-                price === ""
-            ) {
+            // Kiểm tra thông tin cơ bản
+            if (!businessId || !categoryId || !dishName) {
                 return res.status(400).json({
                     success: false,
-                    message: "Vui lòng nhập đầy đủ thông tin món ăn!"
+                    message: "Vui lòng nhập đầy đủ thông tin món ăn"
                 });
             }
 
-            // Kiểm tra dữ liệu hợp lệ
-            if (
-                !Number.isInteger(Number(businessId)) ||
-                Number(businessId) <= 0 ||
-                !Number.isInteger(Number(categoryId)) ||
-                Number(categoryId) <= 0 ||
-                !Number.isFinite(Number(price)) ||
-                Number(price) < 0
-            ) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Thông tin món ăn không hợp lệ!"
-                });
+            // Xử lý danh sách size
+            const sizes = parseSizes(req.body.sizes);
+
+            // Upload ảnh nếu có
+            let image = null;
+
+            if (req.file) {
+                const result = await uploadImage(req.file);
+                image = result.secure_url;
             }
 
-            const validDishTypes = ["food", "drink", "other"];
-
-            if (dishType && !validDishTypes.includes(dishType)) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Loại món ăn không hợp lệ!"
-                });
-            }
-
-            // Kiểm tra ảnh
-            if (!req.file) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Vui lòng chọn ảnh món ăn!"
-                });
-            }
-
-            // Upload ảnh
-            const uploadResult = await uploadImage(req.file);
-
-            const image = uploadResult.secure_url;
-            uploadedImagePublicId = uploadResult.public_id;
-
-            // Lưu vào database
-            const result = await dishModel.createDish({
-                businessId: Number(businessId),
-                categoryId: Number(categoryId),
-                dishName: dishName.trim(),
-                description: description || "",
+            const dishData = {
+                businessId,
+                categoryId,
+                dishName,
+                description,
                 image,
-                price: Number(price),
-                dishType: dishType || "food"
-            });
+                price: price !== undefined && price !== ""
+                    ? Number(price)
+                    : undefined,
+                dishType,
+                sizes
+            };
 
-            // Lưu DB thành công
-            uploadedImagePublicId = null;
+            const result = await dishModel.createDish(dishData);
 
             return res.status(201).json({
                 success: true,
-                message: "Thêm món ăn thành công!",
-                data: {
-                    dishId: result.insertId,
-                    businessId: Number(businessId),
-                    categoryId: Number(categoryId),
-                    dishName: dishName.trim(),
-                    description: description || "",
-                    image,
-                    price: Number(price),
-                    dishType: dishType || "food"
-                }
+                message: "Thêm món ăn thành công",
+                data: result
             });
 
         } catch (error) {
-            console.error("Lỗi thêm món ăn:", error);
-
-            // Xóa ảnh nếu upload thành công nhưng lưu DB thất bại
-            if (uploadedImagePublicId) {
-                try {
-                    await cloudinary.uploader.destroy(uploadedImagePublicId);
-                } catch (deleteError) {
-                    console.error("Lỗi xóa ảnh:", deleteError);
-                }
-            }
+            console.error("Lỗi createDish:", error);
 
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server khi thêm món ăn!",
-                error: error.message
+                message: error.message || "Không thể thêm món ăn"
             });
         }
     },
 
-    // ====================================
-    // LẤY MÓN ĂN THEO BUSINESS ID
-    // ====================================
+
+    // Hiển thị món theo businessId
     getDishesByBusinessId: async (req, res) => {
         try {
             const { businessId } = req.params;
-
-            if (
-                !Number.isInteger(Number(businessId)) ||
-                Number(businessId) <= 0
-            ) {
-                return res.status(400).json({
-                    success: false,
-                    message: "businessId không hợp lệ!"
-                });
-            }
 
             const dishes = await dishModel.getDishesByBusinessId(businessId);
 
             return res.status(200).json({
                 success: true,
-                message: "Lấy danh sách món ăn thành công!",
                 data: dishes
             });
 
         } catch (error) {
-            console.error("Lỗi lấy món ăn:", error);
+            console.error("Lỗi getDishesByBusinessId:", error);
 
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server khi lấy danh sách món ăn!",
-                error: error.message
+                message: "Không thể lấy danh sách món ăn"
             });
         }
     },
 
-    // ====================================
-    // LẤY TẤT CẢ MÓN ĂN
-    // ====================================
+
+    // Hiển thị tất cả món
     getAllDishes: async (req, res) => {
         try {
             const dishes = await dishModel.getAllDishes();
 
             return res.status(200).json({
                 success: true,
-                message: "Lấy tất cả món ăn thành công!",
                 data: dishes
             });
 
         } catch (error) {
-            console.error("Lỗi lấy tất cả món ăn:", error);
+            console.error("Lỗi getAllDishes:", error);
 
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server khi lấy danh sách món ăn!",
-                error: error.message
+                message: "Không thể lấy danh sách món ăn"
             });
         }
     },
 
-    // ====================================
-    // CẬP NHẬT MÓN ĂN
-    // ====================================
-    updateDish: async (req, res) => {
-        let newImagePublicId = null;
 
+    // Cập nhật món ăn
+    updateDish: async (req, res) => {
         try {
-            const { dishId, businessId } = req.params;
+            const { businessId, dishId } = req.params;
 
             const {
                 categoryId,
@@ -254,55 +197,7 @@ const dishController = {
                 dishType
             } = req.body;
 
-            // 1. Kiểm tra ID
-            if (
-                !Number.isInteger(Number(dishId)) ||
-                Number(dishId) <= 0 ||
-                !Number.isInteger(Number(businessId)) ||
-                Number(businessId) <= 0
-            ) {
-                return res.status(400).json({
-                    success: false,
-                    message: "ID món ăn hoặc ID quán không hợp lệ!"
-                });
-            }
-
-            // 2. Kiểm tra dữ liệu bắt buộc
-            if (
-                !categoryId ||
-                !dishName?.trim() ||
-                price == null ||
-                price === ""
-            ) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Vui lòng nhập đầy đủ thông tin món ăn!"
-                });
-            }
-
-            // 3. Kiểm tra dữ liệu hợp lệ
-            if (
-                !Number.isInteger(Number(categoryId)) ||
-                Number(categoryId) <= 0 ||
-                !Number.isFinite(Number(price)) ||
-                Number(price) < 0
-            ) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Thông tin món ăn không hợp lệ!"
-                });
-            }
-
-            const validDishTypes = ["food", "drink", "other"];
-
-            if (dishType && !validDishTypes.includes(dishType)) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Loại món ăn không hợp lệ!"
-                });
-            }
-
-            // 4. Kiểm tra món ăn có tồn tại trong quán
+            // Lấy thông tin món cũ
             const oldDish = await dishModel.getDishById(
                 dishId,
                 businessId
@@ -311,85 +206,66 @@ const dishController = {
             if (!oldDish) {
                 return res.status(404).json({
                     success: false,
-                    message: "Không tìm thấy món ăn trong quán!"
+                    message: "Không tìm thấy món ăn"
                 });
             }
 
-            // 5. Mặc định giữ ảnh cũ
+            // Chỉ xử lý sizes nếu frontend có gửi
+            const sizes = req.body.sizes !== undefined
+                ? parseSizes(req.body.sizes)
+                : undefined;
+
+            // Giữ ảnh cũ nếu không chọn ảnh mới
             let image = oldDish.image;
 
-            // 6. Nếu có ảnh mới thì upload
             if (req.file) {
-                const uploadResult = await uploadImage(req.file);
-
-                image = uploadResult.secure_url;
-                newImagePublicId = uploadResult.public_id;
+                const result = await uploadImage(req.file);
+                image = result.secure_url;
             }
 
-            // 7. Chuẩn bị dữ liệu cập nhật
-            const updatedDish = {
-                categoryId: Number(categoryId),
-                dishName: dishName.trim(),
-                description: description || "",
+            const dishData = {
+                categoryId,
+                dishName,
+                description,
                 image,
-                price: Number(price),
-                dishType: dishType || "food"
+                price: price !== undefined && price !== ""
+                    ? Number(price)
+                    : undefined,
+                dishType,
+                sizes
             };
 
-            // 8. Cập nhật database
-            await dishModel.updateDish(
+            const result = await dishModel.updateDish(
                 dishId,
                 businessId,
-                updatedDish
+                dishData
             );
 
-            // DB đã cập nhật thành công, không xóa ảnh mới trong catch nữa
-            newImagePublicId = null;
-
-            // 9. Nếu có ảnh mới thì xóa ảnh cũ
+            // Nếu cập nhật thành công và có ảnh mới thì xóa ảnh cũ
             if (req.file && oldDish.image) {
                 const oldPublicId = getPublicId(oldDish.image);
 
                 if (oldPublicId) {
-                    try {
-                        await cloudinary.uploader.destroy(oldPublicId);
-                    } catch (deleteError) {
-                        console.error("Không thể xóa ảnh cũ:", deleteError);
-                    }
+                    await cloudinary.uploader.destroy(oldPublicId);
                 }
             }
 
-            // 10. Trả kết quả
             return res.status(200).json({
                 success: true,
-                message: "Cập nhật món ăn thành công!",
-                data: {
-                    ...oldDish,
-                    dishId: Number(dishId),
-                    businessId: Number(businessId),
-                    ...updatedDish
-                }
+                message: "Cập nhật món ăn thành công",
+                data: result
             });
 
         } catch (error) {
-            console.error("Lỗi cập nhật món ăn:", error);
-
-            // Xóa ảnh mới nếu upload thành công nhưng cập nhật DB thất bại
-            if (newImagePublicId) {
-                try {
-                    await cloudinary.uploader.destroy(newImagePublicId);
-                } catch (deleteError) {
-                    console.error("Lỗi xóa ảnh mới:", deleteError);
-                }
-            }
+            console.error("Lỗi updateDish:", error);
 
             return res.status(500).json({
                 success: false,
-                message: "Lỗi server khi cập nhật món ăn!",
-                error: error.message
+                message: error.message || "Không thể cập nhật món ăn"
             });
         }
     }
+
 };
 
 module.exports = dishController;

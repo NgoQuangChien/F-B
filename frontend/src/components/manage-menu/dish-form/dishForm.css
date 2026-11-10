@@ -14,7 +14,7 @@
 .dish-form-modal {
     width: 100%;
     max-width: 620px;
-    max-height: calc(100vh - 40px);
+    max-height: calc(100vh - 60px);
     overflow-y: auto;
     padding: 25px;
     background: #fff;
@@ -182,6 +182,236 @@
     object-fit: cover;
     border-radius: 8px;
     border: 1px solid #eee;
+}
+
+
+/* 
+   SIZE SECTION
+ */
+
+.dish-size-section {
+    padding: 18px;
+    margin: 5px 0 15px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+.dish-size-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+
+.dish-add-size {
+    padding: 9px 13px;
+    border: none;
+    border-radius: 7px;
+    background: #2563eb;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.dish-add-size:hover {
+    background: #1d4ed8;
+}
+
+.dish-size-empty {
+    padding: 20px 10px;
+    text-align: center;
+    border: 1px dashed #cbd5e1;
+    border-radius: 8px;
+    background: white;
+}
+
+.dish-size-empty p {
+    margin: 0 0 5px;
+    font-weight: 600;
+    color: #475569;
+}
+
+.dish-size-empty span {
+    font-size: 13px;
+    color: #94a3b8;
+}
+
+.dish-size-labels,
+.dish-size-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 36px;
+    gap: 10px;
+    align-items: center;
+}
+
+.dish-size-labels {
+    margin-bottom: 8px;
+    color: #475569;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.dish-size-row {
+    margin-bottom: 10px;
+}
+
+.dish-size-row input {
+    width: 100%;
+    min-width: 0;
+    height: 40px;
+    padding: 0 11px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    outline: none;
+    background: white;
+    box-sizing: border-box;
+}
+
+.dish-size-row input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+.dish-remove-size {
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 7px;
+    background: #fee2e2;
+    color: #dc2626;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.dish-remove-size:hover {
+    background: #fecaca;
+}
+
+.dish-size-price-note {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+    padding: 11px;
+    border-radius: 7px;
+    background: #eff6ff;
+    color: #475569;
+    font-size: 13px;
+}
+
+.dish-size-price-note strong {
+    color: #2563eb;
+    font-size: 15px;
+}
+
+/* 
+   CATEGORY SEARCH
+ */
+
+.dish-category-field {
+    position: relative;
+    z-index: 5;
+}
+
+.dish-category-search {
+    position: relative;
+    width: 100%;
+}
+
+.dish-category-search input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.dish-category-suggestions {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    right: 0;
+    max-height: 230px;
+    overflow-y: auto;
+    z-index: 20;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+}
+
+.dish-category-suggestions > button {
+    display: block;
+    width: 100%;
+    padding: 11px 13px;
+    border: none;
+    border-bottom: 1px solid #f1f5f9;
+    background: white;
+    color: #334155;
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.dish-category-suggestions > button:hover,
+.dish-category-suggestions > button.active {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.dish-category-message {
+    padding: 12px;
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+.dish-category-new {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 12px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    color: #475569;
+    font-size: 13px;
+}
+
+.dish-category-new strong {
+    margin-left: 5px;
+    color: #2563eb;
+}
+
+.dish-category-new small {
+    color: #64748b;
+}
+
+/* 
+   RESPONSIVE
+ */
+
+@media (max-width: 600px) {
+    .dish-size-section {
+        padding: 12px;
+    }
+
+    .dish-size-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .dish-size-labels,
+    .dish-size-row {
+        grid-template-columns: 1fr 1fr 32px;
+        gap: 6px;
+    }
+
+    .dish-size-price-note {
+        align-items: flex-start;
+        flex-direction: column;
+    }
 }
 
 
